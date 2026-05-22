@@ -5,5 +5,6 @@
 	[PasswordHash] NVARCHAR(100) NOT NULL,
 	[IsVerified] BIT,
 	[Otp] NVARCHAR(100) NULL,
-	[EntryDate] DATETIME DEFAULT(GETDATE())
+	[EntryDate] DATETIME DEFAULT(GETDATE()), 
+    [LastUpdateDate] DATETIME NULL DEFAULT (GETDATE())
 )
