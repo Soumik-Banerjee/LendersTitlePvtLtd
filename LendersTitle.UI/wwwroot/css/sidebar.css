@@ -1,0 +1,574 @@
+/* ==========================================================================
+   SIDEBAR.CSS — Enterprise Navigation Sidebar
+   ==========================================================================
+   A professional, multi-level sidebar component inspired by Google Ads,
+   Microsoft 365 Admin, and Zoho CRM.  Supports:
+     • Expandable / collapsible submenus
+     • Collapsed "icon-only" mode with CSS tooltips
+     • Mobile off-canvas drawer with overlay backdrop
+   All values reference tokens from variables.css.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   SIDEBAR — Root container
+   ========================================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  z-index: var(--z-sidebar);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width var(--transition-base);
+}
+
+
+/* ==========================================================================
+   SIDEBAR BRAND — Logo & app name at the very top
+   ========================================================================== */
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  height: var(--navbar-height);
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.sidebar__logo {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.sidebar__brand-text {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--transition-fast), width var(--transition-base);
+}
+
+
+/* ==========================================================================
+   SIDEBAR NAV — Scrollable navigation area
+   ========================================================================== */
+
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-3) 0;
+}
+
+
+/* ==========================================================================
+   SIDEBAR SECTION — Grouped set of navigation items
+   ========================================================================== */
+
+.sidebar__section {
+  margin-bottom: var(--space-2);
+}
+
+.sidebar__section-title {
+  display: block;
+  padding: var(--space-3) var(--space-4) var(--space-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--transition-fast);
+  user-select: none;
+}
+
+
+/* ==========================================================================
+   SIDEBAR ITEM — Individual navigation link
+   ========================================================================== */
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  margin: 1px var(--space-2);
+  gap: var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;                  /* for tooltip positioning           */
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  user-select: none;
+}
+
+/* ---------- Hover state ---------- */
+
+.sidebar__item:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+/* ---------- Active / current page ---------- */
+
+.sidebar__item--active {
+  background-color: var(--color-primary-lighter);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  border-left: 3px solid var(--color-primary);
+  padding-left: 13px;                  /* 16px − 3px border                */
+}
+
+.sidebar__item--active:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
+}
+
+/* ---------- Disabled state ---------- */
+
+.sidebar__item--disabled {
+  color: var(--text-disabled);
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+
+/* ==========================================================================
+   SIDEBAR ITEM CHILDREN — Icon · Text · Badge · Arrow
+   ========================================================================== */
+
+/* ---------- Icon ---------- */
+
+.sidebar__item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: inherit;
+  text-align: center;
+}
+
+/* ---------- Text label ---------- */
+
+.sidebar__item-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--transition-fast), width var(--transition-base);
+}
+
+/* ---------- Badge (count indicator) ---------- */
+
+.sidebar__item-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-danger);
+  color: var(--text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  flex-shrink: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.sidebar__item-badge--info {
+  background-color: var(--color-info);
+}
+
+.sidebar__item-badge--success {
+  background-color: var(--color-success);
+}
+
+.sidebar__item-badge--warning {
+  background-color: var(--color-warning);
+}
+
+/* ---------- Arrow / chevron (expandable items) ---------- */
+
+.sidebar__item-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  transition:
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+/* Rotated when parent item is expanded */
+.sidebar__item--expanded .sidebar__item-arrow {
+  transform: rotate(90deg);
+}
+
+
+/* ==========================================================================
+   SIDEBAR SUBMENU — Nested navigation list
+   ========================================================================== */
+
+.sidebar__submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--space-8);      /* indent nested items               */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-base) ease-in-out;
+}
+
+/* Expanded state via direct class */
+.sidebar__submenu.open {
+  max-height: 500px;
+}
+
+/* Expanded state via parent modifier */
+.sidebar__item--expanded + .sidebar__submenu,
+.sidebar__item--expanded ~ .sidebar__submenu {
+  max-height: 500px;
+}
+
+/* Submenu items are visually smaller */
+.sidebar__submenu .sidebar__item {
+  padding: 8px 12px;
+  font-size: var(--font-size-sm);
+  margin-left: 0;
+  margin-right: var(--space-2);
+}
+
+/* Active submenu item inherits the accent but uses a subtler style */
+.sidebar__submenu .sidebar__item--active {
+  background-color: var(--color-primary-lighter);
+  color: var(--color-primary);
+  border-left: 2px solid var(--color-primary);
+  padding-left: 10px;                  /* 12px − 2px border                */
+  font-weight: var(--font-weight-medium);
+}
+
+
+/* ==========================================================================
+   SIDEBAR FOOTER — Bottom-pinned area (user info, collapse toggle)
+   ========================================================================== */
+
+.sidebar__footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-color);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---------- User info block inside footer ---------- */
+
+.sidebar__footer-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar__footer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.sidebar__footer-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-circle);
+  object-fit: cover;
+}
+
+.sidebar__footer-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  transition: opacity var(--transition-fast), width var(--transition-base);
+}
+
+.sidebar__footer-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__footer-role {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Collapse toggle button ---------- */
+
+.sidebar__collapse-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.sidebar__collapse-btn:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+/* Rotate chevron when sidebar is collapsed */
+.sidebar-collapsed .sidebar__collapse-btn {
+  transform: rotate(180deg);
+}
+
+
+/* ==========================================================================
+   COLLAPSED STATE
+   ==========================================================================
+   When `.sidebar-collapsed` is present on a parent (typically `.app-wrapper`),
+   the sidebar shrinks to icon-only mode.
+   ========================================================================== */
+
+.sidebar-collapsed .sidebar {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* Hide text-based elements */
+.sidebar-collapsed .sidebar__item-text,
+.sidebar-collapsed .sidebar__section-title,
+.sidebar-collapsed .sidebar__brand-text,
+.sidebar-collapsed .sidebar__item-arrow,
+.sidebar-collapsed .sidebar__item-badge,
+.sidebar-collapsed .sidebar__footer-info {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Hide submenus entirely */
+.sidebar-collapsed .sidebar__submenu {
+  max-height: 0 !important;
+  padding: 0;
+  visibility: hidden;
+}
+
+/* Center the nav items */
+.sidebar-collapsed .sidebar__item {
+  justify-content: center;
+  padding: 10px 0;
+  margin: 1px auto;
+  gap: 0;
+  border-left: none;
+}
+
+.sidebar-collapsed .sidebar__item--active {
+  padding-left: 0;
+  border-left: none;
+  border-bottom: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+}
+
+/* Center brand logo */
+.sidebar-collapsed .sidebar__brand {
+  justify-content: center;
+  padding: 0;
+}
+
+/* Adjust footer in collapsed mode */
+.sidebar-collapsed .sidebar__footer {
+  justify-content: center;
+  padding: var(--space-3) var(--space-1);
+}
+
+
+/* ==========================================================================
+   COLLAPSED TOOLTIP — CSS-only tooltip on hover (collapsed mode)
+   ========================================================================== */
+
+.sidebar-collapsed .sidebar__item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(var(--sidebar-collapsed-width) + 6px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--gray-900);
+  color: var(--text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: var(--z-tooltip);
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+}
+
+/* Small arrow on the tooltip */
+.sidebar-collapsed .sidebar__item::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--sidebar-collapsed-width) + 1px);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right-color: var(--gray-900);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: var(--z-tooltip);
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+}
+
+.sidebar-collapsed .sidebar__item:hover::after,
+.sidebar-collapsed .sidebar__item:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* ==========================================================================
+   MOBILE — Off-canvas drawer
+   ==========================================================================
+   On viewports ≤ 1024px the sidebar slides off-screen and is toggled via
+   the `.sidebar-open` class on `<body>` or `.app-wrapper`.
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+
+  /* Push sidebar off screen by default */
+  .sidebar {
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    box-shadow: none;
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  /* Visible when .sidebar-open is active */
+  .sidebar-open .sidebar {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* ---------- Backdrop overlay ---------- */
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: var(--bg-overlay);
+    z-index: calc(var(--z-sidebar) - 1);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--transition-base),
+      visibility var(--transition-base);
+  }
+
+  .sidebar-open .sidebar-backdrop {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Reset collapsed overrides on mobile — always show full sidebar */
+  .sidebar-collapsed .sidebar {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar-collapsed .sidebar__item-text,
+  .sidebar-collapsed .sidebar__section-title,
+  .sidebar-collapsed .sidebar__brand-text,
+  .sidebar-collapsed .sidebar__item-arrow,
+  .sidebar-collapsed .sidebar__item-badge,
+  .sidebar-collapsed .sidebar__footer-info {
+    opacity: 1;
+    width: auto;
+    pointer-events: auto;
+  }
+
+  .sidebar-collapsed .sidebar__item {
+    justify-content: flex-start;
+    padding: 10px 16px;
+    gap: var(--space-3);
+  }
+
+  .sidebar-collapsed .sidebar__submenu {
+    visibility: visible;
+    padding-left: var(--space-8);
+  }
+}
+
+/* ---------- Small mobile (≤ 480px) ---------- */
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: calc(100vw - 56px);         /* leaves a sliver to tap-close      */
+    max-width: var(--sidebar-width);
+  }
+}

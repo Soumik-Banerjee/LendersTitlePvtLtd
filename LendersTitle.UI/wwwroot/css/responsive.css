@@ -1,0 +1,443 @@
+/* ==========================================================================
+   RESPONSIVE.CSS — Breakpoint Overrides & Responsive Utilities
+   ==========================================================================
+   Mobile-first responsive system matching Bootstrap 5 breakpoints.
+   Handles sidebar behavior, grid reflows, typography scaling, navbar
+   adjustments, responsive display utilities, and print styles.
+   All values reference design tokens from variables.css.
+
+   Breakpoints:
+     sm   ≥ 576px
+     md   ≥ 768px
+     lg   ≥ 992px
+     xl   ≥ 1200px
+     xxl  ≥ 1400px
+   ========================================================================== */
+
+
+/* ==========================================================================
+   EXTRA SMALL — max-width: 575.98px  (phones, portrait)
+   ========================================================================== */
+
+@media (max-width: 575.98px) {
+
+  /* Slightly larger base text on small screens for readability */
+  body {
+    font-size: var(--font-size-sm);
+  }
+
+  /* ---- Page Header stacks vertically ---- */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .page-title {
+    font-size: var(--font-size-xl);
+  }
+
+  /* ---- Content rows become single-column ---- */
+  .content-row {
+    flex-direction: column;
+  }
+
+  /* ---- Stat cards shrink values ---- */
+  .card-stat__value {
+    font-size: var(--font-size-xl);
+  }
+
+  /* ---- Table toolbar stacks ---- */
+  .table-toolbar {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .table-toolbar__actions {
+    width: 100%;
+  }
+
+  /* ---- Navbar: hide search bar, profile name & role ---- */
+  .navbar-top__search {
+    display: none;
+  }
+
+  .navbar-top__profile-name,
+  .navbar-top__profile-role {
+    display: none;
+  }
+
+  /* ---- Forms: stack rows ---- */
+  .form-row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* ---- Modal fills more of the screen ---- */
+  .modal-dialog {
+    margin: var(--space-3);
+  }
+
+  /* ---- Timeline reduce padding ---- */
+  .timeline__item {
+    padding-left: 24px;
+  }
+
+  /* ---- Avatar group: tighter overlap ---- */
+  .avatar-group .avatar {
+    margin-left: -6px;
+  }
+}
+
+
+/* ==========================================================================
+   SMALL — max-width: 767.98px  (phones, landscape / small tablets)
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+  /* ---- Sidebar: off-canvas slide-in with overlay ---- */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    z-index: var(--z-sidebar);
+    transition: transform var(--transition-base);
+  }
+
+  /* When the sidebar-open class is toggled on body or wrapper */
+  .sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  /* Overlay behind sidebar */
+  .sidebar-open .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-overlay);
+    z-index: calc(var(--z-sidebar) - 1);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--transition-base);
+  }
+
+  /* ---- Main content: full width, no margin ---- */
+  .app-main {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .app-main {
+    margin-left: 0;
+  }
+
+  /* ---- Breadcrumb: hide in small screens ---- */
+  .navbar-top__breadcrumb {
+    display: none;
+  }
+
+  /* ---- Grid: force single column ---- */
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---- Table: smaller text for dense data ---- */
+  .table-enterprise {
+    font-size: var(--font-size-xs);
+  }
+
+  .table-enterprise th,
+  .table-enterprise td {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* ---- Pagination: tighter spacing ---- */
+  .pagination .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-xs);
+  }
+
+  /* ---- Nav Tabs: scrollable ---- */
+  .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-tabs .nav-link {
+    white-space: nowrap;
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+
+/* ==========================================================================
+   MEDIUM — max-width: 991.98px  (tablets)
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+
+  /* ---- Sidebar auto-collapses to icon-only ---- */
+  .sidebar {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .app-main {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  /* ---- Grid: 4-col becomes 2-col ---- */
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* ---- Grid: 3-col stays 2-col on tablets ---- */
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* ---- Navbar search: constrain width ---- */
+  .navbar-top__search {
+    max-width: 240px;
+  }
+
+  /* ---- Content padding adjusts ---- */
+  .app-main__content {
+    padding: var(--space-4);
+  }
+}
+
+
+/* ==========================================================================
+   LARGE — min-width: 992px  (desktops)
+   ========================================================================== */
+
+@media (min-width: 992px) {
+
+  /* ---- Full sidebar visible ---- */
+  .sidebar {
+    width: var(--sidebar-width);
+    transform: none;
+  }
+
+  /* ---- Collapsed sidebar: icon-only ---- */
+  .sidebar-collapsed .sidebar {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .app-main {
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--transition-base);
+  }
+
+  .sidebar-collapsed .app-main {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  /* ---- Grid: 4-col restored ---- */
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* ---- Grid: 3-col restored ---- */
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+/* ==========================================================================
+   EXTRA LARGE — min-width: 1200px
+   ========================================================================== */
+
+@media (min-width: 1200px) {
+
+  /* ---- Content reaches max width ---- */
+  .app-main__content {
+    max-width: var(--content-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---- All grid columns render as specified ---- */
+  .grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+
+/* ==========================================================================
+   EXTRA-EXTRA LARGE — min-width: 1400px
+   ========================================================================== */
+
+@media (min-width: 1400px) {
+
+  /* ---- Wider content padding for large monitors ---- */
+  .app-main__content {
+    padding: var(--space-8);
+  }
+
+  /* ---- Slightly more breathing room for page headers ---- */
+  .page-header {
+    padding-bottom: var(--space-6);
+  }
+}
+
+
+/* ==========================================================================
+   RESPONSIVE DISPLAY UTILITIES
+   ==========================================================================
+   Show/hide elements at specific breakpoints.
+   Convention: .d-{property}-{breakpoint}
+   ========================================================================== */
+
+/* ---- Small (≤ 575.98px) ---- */
+@media (max-width: 575.98px) {
+  .d-none-sm  { display: none; }
+  .d-block-sm { display: block; }
+  .d-flex-sm  { display: flex; }
+}
+
+/* ---- Medium (≤ 767.98px) ---- */
+@media (max-width: 767.98px) {
+  .d-none-md  { display: none; }
+  .d-block-md { display: block; }
+  .d-flex-md  { display: flex; }
+}
+
+/* ---- Large (≤ 991.98px) ---- */
+@media (max-width: 991.98px) {
+  .d-none-lg  { display: none; }
+  .d-block-lg { display: block; }
+  .d-flex-lg  { display: flex; }
+}
+
+/* ---- Extra Large (≤ 1199.98px) ---- */
+@media (max-width: 1199.98px) {
+  .d-none-xl  { display: none; }
+  .d-block-xl { display: block; }
+  .d-flex-xl  { display: flex; }
+}
+
+/* ---- Min-width show utilities ---- */
+@media (min-width: 576px) {
+  .d-none-sm-up  { display: none; }
+  .d-block-sm-up { display: block; }
+}
+
+@media (min-width: 768px) {
+  .d-none-md-up  { display: none; }
+  .d-block-md-up { display: block; }
+}
+
+@media (min-width: 992px) {
+  .d-none-lg-up  { display: none; }
+  .d-block-lg-up { display: block; }
+}
+
+@media (min-width: 1200px) {
+  .d-none-xl-up  { display: none; }
+  .d-block-xl-up { display: block; }
+}
+
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+
+  /* ---- Hide non-essential UI ---- */
+  .sidebar,
+  .navbar-top,
+  .sidebar-overlay,
+  .toast,
+  .dropdown-menu,
+  .modal-backdrop,
+  .btn,
+  .pagination,
+  .no-print {
+    display: none !important;
+  }
+
+  /* ---- Reset layout ---- */
+  .app-main {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ---- Clean backgrounds ---- */
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  .app-main__content {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* ---- Remove shadows and borders on cards ---- */
+  .card,
+  .card-enterprise,
+  .modal-content,
+  .toast {
+    box-shadow: none !important;
+    border: 1px solid #cccccc !important;
+  }
+
+  /* ---- Table: ensure borders print ---- */
+  .table-enterprise th,
+  .table-enterprise td {
+    border: 1px solid #cccccc !important;
+    padding: 4pt 8pt;
+  }
+
+  /* ---- Links: show URL ---- */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666666;
+    font-weight: normal;
+  }
+
+  /* Skip internal links and anchors */
+  a[href^="#"]::after,
+  a[href^="javascript"]::after {
+    content: "";
+  }
+
+  /* ---- Images: prevent page breaks inside ---- */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* ---- Headings: keep with next content ---- */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    color: #000000 !important;
+  }
+
+  /* ---- Tables: avoid breaking rows ---- */
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* ---- Page margins ---- */
+  @page {
+    margin: 1.5cm;
+  }
+}

@@ -1,0 +1,57 @@
+/* ==========================================================================
+   APP.CSS — Master Import File (Single Entry Point)
+   ==========================================================================
+   Import this ONE file in your ASP.NET Core _Layout.cshtml to load the
+   entire design system. Files are ordered by cascade dependency.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. FOUNDATION — Design tokens & theme switching
+   -------------------------------------------------------------------------- */
+@import url('variables.css');        /* CSS custom properties + global resets */
+@import url('theme.css');            /* Dark theme variable overrides */
+
+/* --------------------------------------------------------------------------
+   2. LAYOUT — Page structure & navigation chrome
+   -------------------------------------------------------------------------- */
+@import url('layout.css');           /* App wrapper, content area, page headers */
+@import url('sidebar.css');          /* Collapsible multi-level sidebar */
+@import url('navbar.css');           /* Sticky top navbar + dropdowns */
+
+/* --------------------------------------------------------------------------
+   3. CORE COMPONENTS — Bootstrap overrides & extensions
+   -------------------------------------------------------------------------- */
+@import url('buttons.css');          /* Button system (sizes, variants, states) */
+@import url('forms.css');            /* Form controls, floating labels, validation */
+@import url('tables.css');           /* Enterprise data tables */
+@import url('cards.css');            /* Dashboard cards, KPI, stat, activity */
+
+/* --------------------------------------------------------------------------
+   4. UI COMPONENTS — Modals, badges, alerts, timeline, skeletons, etc.
+   -------------------------------------------------------------------------- */
+@import url('components.css');       /* All miscellaneous UI components */
+
+/* --------------------------------------------------------------------------
+   5. UTILITIES — Tailwind-inspired utility classes
+   -------------------------------------------------------------------------- */
+@import url('utilities.css');        /* Spacing, flex, grid, text, colors, etc. */
+
+/* --------------------------------------------------------------------------
+   6. MOTION — Keyframes & transition utilities
+   -------------------------------------------------------------------------- */
+@import url('animations.css');       /* Subtle enterprise animations */
+
+/* --------------------------------------------------------------------------
+   7. PAGE-SPECIFIC — Module-level styles
+   -------------------------------------------------------------------------- */
+@import url('pages.css');            /* Login, dashboard, attendance, loan, etc. */
+
+/* --------------------------------------------------------------------------
+   8. RESPONSIVE — Breakpoint overrides (loaded late to override above)
+   -------------------------------------------------------------------------- */
+@import url('responsive.css');       /* Mobile, tablet, desktop breakpoints */
+
+/* --------------------------------------------------------------------------
+   9. DARK MODE — Component-level dark refinements (loaded last for max specificity)
+   -------------------------------------------------------------------------- */
+@import url('dark-mode.css');        /* Structural dark theme component overrides */

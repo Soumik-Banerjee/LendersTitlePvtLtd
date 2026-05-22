@@ -1,0 +1,762 @@
+/* ==========================================================================
+   NAVBAR.CSS — Enterprise Top Navigation Bar
+   ==========================================================================
+   A sticky top bar containing (left-to-right):
+     • Hamburger toggle  •  Breadcrumb trail
+     • Global search bar
+     • Notification bell  •  Theme toggle  •  User profile dropdown
+   All values reference tokens from variables.css.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   NAVBAR ROOT — Sticky bar across the top
+   ========================================================================== */
+
+.navbar-top {
+  position: sticky;
+  top: 0;
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  gap: var(--space-4);
+  background-color: var(--bg-navbar);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-navbar);
+  z-index: var(--z-navbar);
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   LEFT SECTION — Hamburger + Breadcrumb
+   ========================================================================== */
+
+.navbar-top__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* ---------- Hamburger / sidebar toggle ---------- */
+
+.navbar-top__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.navbar-top__toggle:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.navbar-top__toggle:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* ---------- Breadcrumb trail ---------- */
+
+.navbar-top__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navbar-top__breadcrumb-item {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.navbar-top__breadcrumb-item:hover {
+  color: var(--text-link);
+}
+
+/* Current / last breadcrumb item */
+.navbar-top__breadcrumb-item--current {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  pointer-events: none;
+}
+
+.navbar-top__breadcrumb-separator {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.625rem;
+  color: var(--gray-300);
+  margin: 0 var(--space-1);
+  user-select: none;
+}
+
+
+/* ==========================================================================
+   CENTER SECTION — Global search
+   ========================================================================== */
+
+.navbar-top__center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* ---------- Search wrapper ---------- */
+
+.navbar-top__search {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--gray-100);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    width var(--transition-base),
+    box-shadow var(--transition-fast);
+}
+
+.navbar-top__search:focus-within {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color-focus);
+  box-shadow: var(--focus-ring);
+}
+
+/* Search icon (Font Awesome fa-magnifying-glass) */
+.navbar-top__search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.navbar-top__search:focus-within .navbar-top__search-icon {
+  color: var(--color-primary);
+}
+
+/* ---------- Search input ---------- */
+
+.navbar-top__search-input {
+  display: block;
+  width: 100%;
+  height: 36px;
+  border: none;
+  background: transparent;
+  padding: 0 var(--space-4) 0 var(--space-10);   /* left space for icon   */
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.navbar-top__search-input::placeholder {
+  color: var(--text-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+/* Keyboard shortcut hint inside search */
+.navbar-top__search-shortcut {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-mono);
+  color: var(--text-muted);
+  line-height: 1;
+  pointer-events: none;
+  background-color: var(--bg-surface);
+}
+
+
+/* ==========================================================================
+   RIGHT SECTION — Actions: notifications, theme, profile
+   ========================================================================== */
+
+.navbar-top__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   ICON BUTTON — Shared style for notification bell, theme toggle, etc.
+   ========================================================================== */
+
+.navbar-top__icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.navbar-top__icon-btn:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.navbar-top__icon-btn:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* ---------- Notification badge (red dot / count) ---------- */
+
+.navbar-top__badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-danger);
+  color: var(--text-inverse);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  border: 2px solid var(--bg-navbar);  /* ring around badge for separation  */
+}
+
+/* Dot-only variant (no text) */
+.navbar-top__badge--dot {
+  min-width: 8px;
+  height: 8px;
+  padding: 0;
+  top: 6px;
+  right: 6px;
+}
+
+
+/* ==========================================================================
+   NOTIFICATION DROPDOWN — Panel below the bell icon
+   ========================================================================== */
+
+.navbar-top__notification-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  width: 360px;
+  max-height: 480px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  z-index: var(--z-dropdown);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* Hidden by default — toggled via JS */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.navbar-top__notification-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ---------- Dropdown header ---------- */
+
+.navbar-top__notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.navbar-top__notification-header-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.navbar-top__notification-header-action {
+  font-size: var(--font-size-xs);
+  color: var(--text-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-family);
+  transition: color var(--transition-fast);
+}
+
+.navbar-top__notification-header-action:hover {
+  color: var(--text-link-hover);
+}
+
+/* ---------- Scrollable notification list ---------- */
+
+.navbar-top__notification-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ---------- Individual notification item ---------- */
+
+.navbar-top__notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.navbar-top__notification-item:last-child {
+  border-bottom: none;
+}
+
+.navbar-top__notification-item:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+/* Unread indicator */
+.navbar-top__notification-item--unread {
+  background-color: var(--color-primary-lighter);
+}
+
+.navbar-top__notification-item--unread:hover {
+  background-color: var(--color-primary-light);
+}
+
+/* Notification icon */
+.navbar-top__notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-circle);
+  background-color: var(--gray-100);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  flex-shrink: 0;
+}
+
+.navbar-top__notification-icon--success { background-color: var(--color-success-lighter); color: var(--color-success); }
+.navbar-top__notification-icon--danger  { background-color: var(--color-danger-lighter);  color: var(--color-danger);  }
+.navbar-top__notification-icon--warning { background-color: var(--color-warning-lighter); color: var(--color-warning); }
+.navbar-top__notification-icon--info    { background-color: var(--color-info-lighter);    color: var(--color-info);    }
+
+/* Notification content */
+.navbar-top__notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-top__notification-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1);
+  line-height: var(--line-height-snug);
+}
+
+.navbar-top__notification-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: var(--line-height-normal);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.navbar-top__notification-time {
+  font-size: var(--font-size-xs);
+  color: var(--text-disabled);
+  margin-top: var(--space-1);
+}
+
+/* ---------- Dropdown footer ---------- */
+
+.navbar-top__notification-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.navbar-top__notification-footer a {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.navbar-top__notification-footer a:hover {
+  color: var(--text-link-hover);
+}
+
+
+/* ==========================================================================
+   THEME TOGGLE — Sun / moon icon button
+   ========================================================================== */
+
+.navbar-top__theme-toggle {
+  /* Inherits .navbar-top__icon-btn styles — add alongside that class     */
+}
+
+/* Hide the inactive icon when toggling themes */
+.navbar-top__theme-toggle .fa-sun   { display: inline-flex; }
+.navbar-top__theme-toggle .fa-moon  { display: none;        }
+
+[data-theme="dark"] .navbar-top__theme-toggle .fa-sun  { display: none;        }
+[data-theme="dark"] .navbar-top__theme-toggle .fa-moon { display: inline-flex; }
+
+
+/* ==========================================================================
+   PROFILE — Avatar + name + role + dropdown
+   ========================================================================== */
+
+.navbar-top__profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--transition-fast);
+}
+
+.navbar-top__profile:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+/* ---------- Avatar ---------- */
+
+.navbar-top__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.navbar-top__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-circle);
+}
+
+/* ---------- Profile text ---------- */
+
+.navbar-top__profile-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.navbar-top__profile-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--line-height-tight);
+}
+
+.navbar-top__profile-role {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--line-height-tight);
+}
+
+/* Dropdown caret beside profile */
+.navbar-top__profile-caret {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.navbar-top__profile.open .navbar-top__profile-caret {
+  transform: rotate(180deg);
+}
+
+
+/* ==========================================================================
+   PROFILE DROPDOWN
+   ========================================================================== */
+
+.navbar-top__profile-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  width: 240px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.navbar-top__profile-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ---------- Dropdown header (user summary) ---------- */
+
+.navbar-top__profile-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-top__profile-dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  flex-shrink: 0;
+}
+
+.navbar-top__profile-dropdown-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.navbar-top__profile-dropdown-email {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Dropdown menu items ---------- */
+
+.navbar-top__profile-dropdown-menu {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1) 0;
+}
+
+.navbar-top__profile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.navbar-top__profile-dropdown-item:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+}
+
+.navbar-top__profile-dropdown-item i {
+  width: 16px;
+  text-align: center;
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Divider between menu groups */
+.navbar-top__profile-dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: var(--space-1) 0;
+}
+
+/* Danger item (e.g. Logout) */
+.navbar-top__profile-dropdown-item--danger {
+  color: var(--color-danger);
+}
+
+.navbar-top__profile-dropdown-item--danger:hover {
+  background-color: var(--color-danger-lighter);
+  color: var(--color-danger-hover);
+}
+
+.navbar-top__profile-dropdown-item--danger i {
+  color: var(--color-danger);
+}
+
+
+/* ==========================================================================
+   RESPONSIVE — Tablet & Mobile
+   ========================================================================== */
+
+/* ---------- Tablet (≤ 1024px) ---------- */
+
+@media (max-width: 1024px) {
+  .navbar-top__search {
+    max-width: 320px;
+  }
+
+  .navbar-top__profile-info {
+    display: none;                     /* hide name/role, show avatar only  */
+  }
+
+  .navbar-top__profile-caret {
+    display: none;
+  }
+}
+
+/* ---------- Mobile (≤ 768px) ---------- */
+
+@media (max-width: 768px) {
+  .navbar-top {
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .navbar-top__breadcrumb {
+    display: none;                     /* breadcrumbs hidden on mobile      */
+  }
+
+  .navbar-top__search {
+    max-width: none;
+    flex: 1;
+  }
+
+  .navbar-top__search-shortcut {
+    display: none;
+  }
+
+  /* Notification dropdown takes full width on mobile */
+  .navbar-top__notification-dropdown {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: calc(100vh - var(--navbar-height));
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* Profile dropdown takes full width on mobile */
+  .navbar-top__profile-dropdown {
+    position: fixed;
+    top: var(--navbar-height);
+    right: 0;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+}
+
+/* ---------- Small mobile (≤ 480px) ---------- */
+
+@media (max-width: 480px) {
+  .navbar-top__center {
+    display: none;                     /* hide search bar; use overlay      */
+  }
+
+  /* Provide a search trigger icon instead */
+  .navbar-top__search-trigger {
+    display: inline-flex;
+  }
+
+  .navbar-top__profile-dropdown {
+    max-width: none;
+    left: 0;
+    border-radius: 0;
+  }
+}
+
+/* Search trigger (only visible when center search is hidden) */
+.navbar-top__search-trigger {
+  display: none;                       /* visible only via media query      */
+}

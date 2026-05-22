@@ -1,0 +1,922 @@
+/* ==========================================================================
+   COMPONENTS.CSS — UI Components & Bootstrap Overrides
+   ==========================================================================
+   Miscellaneous UI components including Bootstrap 5 overrides and custom
+   enterprise components. All values reference design tokens from variables.css.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   MODAL OVERRIDES
+   ========================================================================== */
+
+.modal-content {
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  background-color: var(--bg-surface);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--space-4) var(--space-5);
+  align-items: center;
+}
+
+.modal-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.modal-body {
+  padding: var(--space-5);
+  color: var(--text-secondary);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding: var(--space-3) var(--space-5);
+  gap: var(--space-2);
+}
+
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.5);
+}
+
+.modal-backdrop.show {
+  opacity: 1;
+}
+
+
+/* ==========================================================================
+   ACCORDION OVERRIDES
+   ========================================================================== */
+
+.accordion-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  background-color: transparent;
+}
+
+/* Remove the default border-top that Bootstrap adds between items */
+.accordion-item:not(:first-of-type) {
+  border-top: 1px solid var(--border-color);
+}
+
+.accordion-button {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
+  padding: var(--space-4);
+  border: none;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.accordion-button:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--color-primary);
+  background-color: var(--color-primary-lighter);
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  transition: transform var(--transition-base);
+}
+
+.accordion-body {
+  padding: var(--space-4);
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+
+/* ==========================================================================
+   BADGE OVERRIDES & STATUS BADGES
+   ========================================================================== */
+
+.badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 0.25em 0.6em;
+  border-radius: var(--radius-pill);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--tracking-wide);
+  vertical-align: middle;
+}
+
+/* ---- Dot Badge (colored circle, no text) ---- */
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: var(--radius-circle);
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+}
+
+/* ---- Status Badges ---- */
+.badge-status-active {
+  color: var(--color-success);
+  background-color: var(--color-success-light);
+}
+
+.badge-status-inactive {
+  color: var(--gray-600);
+  background-color: var(--gray-200);
+}
+
+.badge-status-pending {
+  color: var(--color-warning);
+  background-color: var(--color-warning-light);
+}
+
+.badge-status-rejected {
+  color: var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+
+.badge-status-draft {
+  color: var(--gray-500);
+  background-color: var(--gray-100);
+}
+
+
+/* ==========================================================================
+   ALERT OVERRIDES
+   ========================================================================== */
+
+.alert {
+  border-radius: var(--radius-md);
+  border: none;
+  border-left: 4px solid transparent;
+  padding: var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.alert-primary {
+  border-left-color: var(--color-primary);
+  background-color: var(--color-primary-lighter);
+}
+
+.alert-success {
+  border-left-color: var(--color-success);
+  background-color: var(--color-success-lighter);
+}
+
+.alert-danger {
+  border-left-color: var(--color-danger);
+  background-color: var(--color-danger-lighter);
+}
+
+.alert-warning {
+  border-left-color: var(--color-warning);
+  background-color: var(--color-warning-lighter);
+}
+
+.alert-info {
+  border-left-color: var(--color-info);
+  background-color: var(--color-info-lighter);
+}
+
+/* ---- Alert Icon ---- */
+.alert__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  line-height: 1;
+}
+
+.alert-primary .alert__icon  { color: var(--color-primary); }
+.alert-success .alert__icon  { color: var(--color-success); }
+.alert-danger .alert__icon   { color: var(--color-danger); }
+.alert-warning .alert__icon  { color: var(--color-warning); }
+.alert-info .alert__icon     { color: var(--color-info); }
+
+
+/* ==========================================================================
+   NAV TABS OVERRIDES
+   ========================================================================== */
+
+.nav-tabs {
+  border-bottom: 1px solid var(--border-color);
+  gap: 0;
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary);
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast), border-bottom-color var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--text-primary);
+  border-bottom-color: var(--gray-300);
+  isolation: auto;
+}
+
+.nav-tabs .nav-link:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  background-color: transparent;
+}
+
+
+/* ==========================================================================
+   PAGINATION OVERRIDES
+   ========================================================================== */
+
+.pagination {
+  gap: 0;
+}
+
+.pagination .page-link {
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.375rem 0.75rem;
+  font-size: var(--font-size-sm);
+  margin: 0 2px;
+  background-color: var(--bg-surface);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  line-height: var(--line-height-normal);
+}
+
+.pagination .page-link:hover {
+  background-color: var(--gray-100);
+  color: var(--text-primary);
+  border-color: var(--border-color-hover);
+}
+
+.pagination .page-link:focus {
+  box-shadow: none;
+}
+
+.pagination .page-link:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--text-inverse);
+  font-weight: var(--font-weight-medium);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: var(--text-disabled);
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+  pointer-events: none;
+}
+
+
+/* ==========================================================================
+   DROPDOWN OVERRIDES
+   ========================================================================== */
+
+/* Fade-in keyframe for dropdown appearance */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  padding: var(--space-1);
+  background-color: var(--bg-surface);
+  animation: dropdownFadeIn var(--transition-fast) ease forwards;
+  min-width: 180px;
+}
+
+.dropdown-item {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  transition: background-color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--gray-100);
+  color: var(--text-primary);
+}
+
+.dropdown-item:active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.dropdown-item:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+.dropdown-item.disabled,
+.dropdown-item:disabled {
+  color: var(--text-disabled);
+  pointer-events: none;
+}
+
+.dropdown-divider {
+  border-color: var(--border-color);
+  margin: var(--space-1) 0;
+  opacity: 1;
+}
+
+.dropdown-header {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: var(--space-2) var(--space-4);
+}
+
+
+/* ==========================================================================
+   BREADCRUMB OVERRIDES
+   ========================================================================== */
+
+.breadcrumb {
+  font-size: var(--font-size-sm);
+  margin-bottom: 0;
+  padding: 0;
+  background-color: transparent;
+  align-items: center;
+}
+
+.breadcrumb-item a {
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb-item a:hover {
+  color: var(--text-link);
+}
+
+.breadcrumb-item.active {
+  color: var(--text-secondary);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "\203A";  /* › character */
+  color: var(--text-disabled);
+  font-size: var(--font-size-base);
+  padding: 0 var(--space-2);
+}
+
+
+/* ==========================================================================
+   PROGRESS BAR OVERRIDES
+   ========================================================================== */
+
+.progress {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--gray-200);
+  overflow: hidden;
+}
+
+.progress-bar {
+  border-radius: var(--radius-pill);
+  transition: width 0.6s ease;
+  background-color: var(--color-primary);
+}
+
+.progress-bar-success { background-color: var(--color-success); }
+.progress-bar-danger  { background-color: var(--color-danger); }
+.progress-bar-warning { background-color: var(--color-warning); }
+.progress-bar-info    { background-color: var(--color-info); }
+
+
+/* ==========================================================================
+   TOAST OVERRIDES
+   ========================================================================== */
+
+.toast {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  font-size: var(--font-size-sm);
+  overflow: hidden;
+}
+
+.toast-header {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--font-weight-medium);
+}
+
+.toast-body {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+}
+
+
+/* ==========================================================================
+   TIMELINE — Custom Component
+   ========================================================================== */
+
+.timeline {
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: 32px;
+  padding-bottom: var(--space-6);
+  border-left: 2px solid var(--border-color);
+  margin-left: 6px;
+}
+
+.timeline__item:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+/* ---- Timeline Dot (positioned on the vertical line) ---- */
+.timeline__dot {
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-primary);
+  border: 2px solid var(--bg-surface);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.timeline__dot--success {
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 2px var(--color-success-light);
+}
+
+.timeline__dot--danger {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 0 2px var(--color-danger-light);
+}
+
+.timeline__dot--warning {
+  background-color: var(--color-warning);
+  box-shadow: 0 0 0 2px var(--color-warning-light);
+}
+
+/* ---- Timeline Content ---- */
+.timeline__content {
+  background-color: var(--bg-surface);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.timeline__time {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+  display: block;
+}
+
+.timeline__title {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.timeline__description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   SKELETON LOADER — Custom Component
+   ========================================================================== */
+
+/* Shimmer animation for skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-shine) 50%,
+    var(--bg-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  margin-bottom: var(--space-2);
+}
+
+/* Width variants */
+.skeleton-line--sm   { width: 40%; }
+.skeleton-line--md   { width: 70%; }
+.skeleton-line--lg   { width: 90%; }
+.skeleton-line--full { width: 100%; }
+
+.skeleton-circle {
+  border-radius: var(--radius-circle);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-shine) 50%,
+    var(--bg-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-rect {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-shine) 50%,
+    var(--bg-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+
+/* ==========================================================================
+   EMPTY STATE — Custom Component
+   ========================================================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+}
+
+.empty-state__icon {
+  font-size: 64px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+  opacity: 0.6;
+  line-height: 1;
+}
+
+.empty-state__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.empty-state__description {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.empty-state__action {
+  margin-top: var(--space-6);
+}
+
+
+/* ==========================================================================
+   STATUS INDICATOR — Custom Component
+   ========================================================================== */
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.status-indicator__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+  background-color: var(--gray-400);
+}
+
+/* ---- Online / Active ---- */
+.status-indicator--online .status-indicator__dot,
+.status-indicator--active .status-indicator__dot {
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 2px var(--color-success-light);
+}
+
+/* ---- Offline / Inactive ---- */
+.status-indicator--offline .status-indicator__dot,
+.status-indicator--inactive .status-indicator__dot {
+  background-color: var(--gray-400);
+}
+
+/* ---- Busy / Warning ---- */
+.status-indicator--busy .status-indicator__dot,
+.status-indicator--warning .status-indicator__dot {
+  background-color: var(--color-warning);
+  box-shadow: 0 0 0 2px var(--color-warning-light);
+}
+
+/* ---- Error / Danger ---- */
+.status-indicator--error .status-indicator__dot,
+.status-indicator--danger .status-indicator__dot {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 0 2px var(--color-danger-light);
+}
+
+
+/* ==========================================================================
+   DIVIDER — Custom Component
+   ========================================================================== */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+/* When there is no text, only render one line */
+.divider:empty::after {
+  display: none;
+}
+
+.divider__text {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: 0 var(--space-2);
+}
+
+
+/* ==========================================================================
+   AVATAR — Custom Component
+   ========================================================================== */
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-circle);
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: var(--gray-200);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  vertical-align: middle;
+
+  /* Default size (md) */
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-sm);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Avatar Sizes ---- */
+.avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-xs);
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--font-size-xs);
+}
+
+.avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-sm);
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--font-size-base);
+}
+
+.avatar--xl {
+  width: 64px;
+  height: 64px;
+  font-size: var(--font-size-lg);
+}
+
+/* ---- Avatar Initials ---- */
+.avatar__initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  user-select: none;
+  line-height: 1;
+}
+
+/* ---- Avatar Group (overlapping) ---- */
+.avatar-group {
+  display: inline-flex;
+  flex-direction: row-reverse;
+}
+
+.avatar-group .avatar {
+  border: 2px solid var(--bg-surface);
+  margin-left: -8px;
+  transition: transform var(--transition-fast);
+}
+
+.avatar-group .avatar:last-child {
+  margin-left: 0;
+}
+
+.avatar-group .avatar:hover {
+  transform: translateY(-2px);
+  z-index: 1;
+}
+
+
+/* ==========================================================================
+   TOOLTIP (Custom) — Custom Component
+   ========================================================================== */
+
+.tooltip-custom {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-custom__content {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--gray-900);
+  color: var(--text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+  z-index: var(--z-tooltip);
+}
+
+/* Arrow pointing down */
+.tooltip-custom__content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--gray-900) transparent transparent transparent;
+}
+
+.tooltip-custom:hover .tooltip-custom__content,
+.tooltip-custom:focus-within .tooltip-custom__content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---- Tooltip Placement Variants ---- */
+
+/* Bottom */
+.tooltip-custom--bottom .tooltip-custom__content {
+  bottom: auto;
+  top: calc(100% + 8px);
+}
+
+.tooltip-custom--bottom .tooltip-custom__content::after {
+  top: auto;
+  bottom: 100%;
+  border-color: transparent transparent var(--gray-900) transparent;
+}
+
+/* Left */
+.tooltip-custom--left .tooltip-custom__content {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
+}
+
+.tooltip-custom--left .tooltip-custom__content::after {
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent var(--gray-900);
+}
+
+/* Right */
+.tooltip-custom--right .tooltip-custom__content {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+}
+
+.tooltip-custom--right .tooltip-custom__content::after {
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%);
+  border-color: transparent var(--gray-900) transparent transparent;
+}
