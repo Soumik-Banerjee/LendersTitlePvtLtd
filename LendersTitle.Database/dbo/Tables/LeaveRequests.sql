@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[LeaveRequests]
 (
 	[AutoID] INT IDENTITY(1,1) NOT NULL,
-    UserName NVARCHAR(150) NOT NULL,
+    [Branch] NVARCHAR(50) NOT NULL,
+    [UserName] NVARCHAR(100) NOT NULL,
     [LeaveType] NVARCHAR(20) NOT NULL
         CHECK ([LeaveType] IN ('Sick', 'Casual', 'Annual')),
     [StartDate] DATE NOT NULL,
@@ -12,7 +13,10 @@
         DEFAULT ('Pending')
         CHECK ([Status] IN ('Pending', 'Approved', 'Rejected')),
     [AdminRemarks] NVARCHAR(1000) NULL,
-    [ReviewedBy] NVARCHAR(150) NULL,
+    [ReviewedBy] NVARCHAR(100) NULL,
     [ReviewedAt] DATETIME NULL,
-    [EntryDate] DATETIME DEFAULT (SYSDATETIME())
+    [EntryDate] DATETIME DEFAULT (GETDATE()),
+    CONSTRAINT FK_LeaveRequests_BranchMaster FOREIGN KEY (Branch) REFERENCES dbo.BranchMaster(Branch),
+    CONSTRAINT FK_LeaveRequests_UserMaster_UserName FOREIGN KEY (UserName) REFERENCES dbo.UserMaster(UserName),
+    CONSTRAINT FK_LeaveRequests_UserMaster_ReviewedBy FOREIGN KEY (ReviewedBy) REFERENCES dbo.UserMaster(UserName)
 )
