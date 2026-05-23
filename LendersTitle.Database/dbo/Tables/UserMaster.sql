@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[UserMaster] (
     [AutoID]    INT            IDENTITY (1, 1) NOT NULL,
-    Branch nvarchar(50) not null,
+    [Branch] NVARCHAR(50) not null,
     [UserName]  NVARCHAR (100) NOT NULL,
     [FullName]  NVARCHAR (255) NULL,
     [UserImg]   NVARCHAR(MAX) NULL,
@@ -14,7 +14,7 @@
         CHECK ([Role] IN ('Admin', 'Employee')), 
     [IsActive]  BIT            NULL,
     [IsDefault] BIT            NULL,    
-    [EntryDate] DATETIME DEFAULT(GETDATE())
-    PRIMARY KEY CLUSTERED ([UserName] ASC)
+    [EntryDate] DATETIME DEFAULT(GETDATE()),
+    PRIMARY KEY CLUSTERED ([UserName] ASC),
+    CONSTRAINT FK_UserMaster_BranchMaster FOREIGN KEY (Branch) REFERENCES dbo.BranchMaster(Branch)
 );
-

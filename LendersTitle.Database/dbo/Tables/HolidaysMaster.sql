@@ -4,6 +4,7 @@
 	HolidayName NVARCHAR(150),
 	HolidayDate DATE,
 	DayName NVARCHAR(150),
-	UserName Nvarchar(150),
-	EntryDate Datetime default(getdate())
+	UserName Nvarchar(100),
+	EntryDate Datetime default(getdate()),
+	CONSTRAINT FK_HolidaysMaster_UserMaster FOREIGN KEY (UserName) REFERENCES dbo.UserMaster(UserName)
 )
