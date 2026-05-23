@@ -1,0 +1,377 @@
+@{
+    Layout = null;
+    var currentYear = DateTime.Now.ToString("yyyy");
+    var currentDate = DateTime.Now.ToString("dddd, MMMM dd, yyyy");
+    var currentTime = DateTime.Now.ToString("hh:mm tt");
+}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Lenders Title - Loan Sanction & Employee Management System" />
+    <title>Sign In — Lenders Title</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        .page-login-split {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .page-login-split__card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        .page-login-split__brand-content {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        .page-login-split__theme-toggle {
+            animation: fadeIn 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Toggle Button -->
+    <button type="button"
+            class="page-login-split__theme-toggle"
+            id="theme-toggle"
+            data-theme-toggle
+            aria-label="Switch to dark mode"
+            title="Switch to dark mode">
+        <i class="theme-toggle-icon fa-regular fa-moon"></i>
+        <span class="theme-icon-dark" style="display:none;">
+            <i class="fa-regular fa-moon"></i>
+        </span>
+        <span class="theme-icon-light" style="display:none;">
+            <i class="fa-regular fa-sun"></i>
+        </span>
+    </button>
+
+    <!-- Split Screen Layout -->
+    <div class="page-login-split">
+
+        <!-- Brand Side (Left) -->
+        <div class="page-login-split__brand">
+            <div class="page-login-split__brand-bg"></div>
+            <div class="page-login-split__brand-dots"></div>
+
+            <div class="page-login-split__brand-content">
+                <svg class="page-login-split__brand-logo" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="16" fill="white" fill-opacity="0.15"/>
+                    <path d="M32 16L44 24V40L32 48L20 40V24L32 16Z" stroke="white" stroke-width="2.5" fill="none"/>
+                    <path d="M28 32L31 35L36 29" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <h1 class="page-login-split__brand-title">
+                    Lenders Title
+                </h1>
+
+                <p class="page-login-split__brand-description">
+                    Loan Sanction &amp; Employee Management System
+                </p>
+
+                <div class="page-login-split__datetime" id="liveDateTime">
+                    @currentDate
+                    <span id="liveTime">@currentTime</span>
+                </div>
+
+                <div class="page-login-split__brand-footer">
+                    &copy; @currentYear Lenders Title Pvt Ltd. All rights reserved.
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Side (Right) -->
+        <div class="page-login-split__form">
+            <div class="page-login-split__card">
+
+                <!-- Card Logo -->
+                <svg class="page-login-split__card-logo" width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="64" height="64" rx="16" fill="var(--color-primary)" fill-opacity="0.1"/>
+                    <path d="M32 16L44 24V40L32 48L20 40V24L32 16Z" stroke="var(--color-primary)" stroke-width="2.5" fill="none"/>
+                    <path d="M28 32L31 35L36 29" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <h2 class="page-login-split__card-title">Welcome Back</h2>
+                <p class="page-login-split__card-subtitle">Sign in to your account to continue</p>
+
+                <!-- Error Message -->
+                @if (!string.IsNullOrEmpty(ViewBag.Error))
+                {
+                    <div class="page-login-split__error page-login-split__error--visible">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>@ViewBag.Error</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="page-login-split__error" id="clientError">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="clientErrorMessage"></span>
+                    </div>
+                }
+
+                <!-- Login Form -->
+                <form class="page-login-split__form-area"
+                      id="loginForm"
+                      method="post"
+                      action="@Url.Action("Index", "Login")"
+                      novalidate>
+
+                    <!-- Email / User ID -->
+                    <div class="page-login-split__input-group">
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               name="email"
+                               placeholder="name@company.com"
+                               required
+                               autocomplete="email"
+                               autofocus
+                               value="" />
+                        <i class="fa-regular fa-envelope page-login-split__input-icon"></i>
+                        <div class="invalid-feedback" id="emailError">Please enter a valid email address</div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="page-login-split__input-group">
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="password"
+                               placeholder="Enter your password"
+                               required
+                               autocomplete="current-password"
+                               minlength="6" />
+                        <i class="fa-solid fa-lock page-login-split__input-icon"></i>
+                        <button type="button"
+                                class="page-login-split__password-toggle"
+                                id="passwordToggle"
+                                tabindex="-1"
+                                aria-label="Toggle password visibility">
+                            <i class="fa-regular fa-eye" id="passwordToggleIcon"></i>
+                        </button>
+                        <div class="invalid-feedback" id="passwordError">Password must be at least 6 characters</div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="page-login-split__actions">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="rememberMe"
+                                   name="rememberMe"
+                                   value="true" />
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        <a href="#" class="page-login-split__forgot-link">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="btn btn-primary page-login-split__submit"
+                            id="loginButton">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-spinner" style="display:none;"></span>
+                    </button>
+
+                    <!-- Security Note -->
+                    <div class="page-login-split__security">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Secured with 256-bit encryption</span>
+                    </div>
+                </form>
+
+                <!-- Divider -->
+                <div class="page-login-split__divider">Enterprise Portal</div>
+
+                <!-- Footer -->
+                <div class="page-login-split__footer">
+                    Powered by <a href="#">Lenders Title Technologies</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/theme-toggle.js" asp-append-version="true"></script>
+
+    <script>
+        (function ($) {
+            'use strict';
+
+            /* ------------------------------------------------------------------
+               1. PASSWORD VISIBILITY TOGGLE
+               ------------------------------------------------------------------ */
+            var $passwordInput = $('#password');
+            var $toggleBtn = $('#passwordToggle');
+            var $toggleIcon = $('#passwordToggleIcon');
+
+            $toggleBtn.on('click', function () {
+                var isPassword = $passwordInput.attr('type') === 'password';
+                $passwordInput.attr('type', isPassword ? 'text' : 'password');
+                $toggleIcon.toggleClass('fa-eye fa-eye-slash');
+            });
+
+            /* ------------------------------------------------------------------
+               2. FORM VALIDATION (Client-side)
+               ------------------------------------------------------------------ */
+            var $form = $('#loginForm');
+            var $email = $('#email');
+            var $password = $('#password');
+            var $emailError = $('#emailError');
+            var $passwordError = $('#passwordError');
+            var $clientError = $('#clientError');
+            var $clientErrorMessage = $('#clientErrorMessage');
+            var $loginButton = $('#loginButton');
+            var $btnText = $loginButton.find('.btn-text');
+            var $btnSpinner = $loginButton.find('.btn-spinner');
+
+            // Email regex
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+            function validateEmail() {
+                var val = $email.val().trim();
+                if (val.length === 0) {
+                    $email.removeClass('is-valid is-invalid');
+                    $emailError.hide();
+                    return false;
+                }
+                if (!emailRegex.test(val)) {
+                    $email.addClass('is-invalid').removeClass('is-valid');
+                    $emailError.show();
+                    return false;
+                }
+                $email.addClass('is-valid').removeClass('is-invalid');
+                $emailError.hide();
+                return true;
+            }
+
+            function validatePassword() {
+                var val = $password.val();
+                if (val.length === 0) {
+                    $password.removeClass('is-valid is-invalid');
+                    $passwordError.hide();
+                    return false;
+                }
+                if (val.length < 6) {
+                    $password.addClass('is-invalid').removeClass('is-valid');
+                    $passwordError.show();
+                    return false;
+                }
+                $password.addClass('is-valid').removeClass('is-invalid');
+                $passwordError.hide();
+                return true;
+            }
+
+            // Real-time validation on blur
+            $email.on('blur', validateEmail);
+            $password.on('blur', validatePassword);
+
+            // Real-time validation on input (clear error)
+            $email.on('input', function () {
+                if ($email.hasClass('is-invalid')) {
+                    validateEmail();
+                }
+            });
+
+            $password.on('input', function () {
+                if ($password.hasClass('is-invalid')) {
+                    validatePassword();
+                }
+            });
+
+            // Form submit
+            $form.on('submit', function (e) {
+                var isValid = true;
+
+                // Validate email
+                if (!emailRegex.test($email.val().trim())) {
+                    $email.addClass('is-invalid').removeClass('is-valid');
+                    $emailError.show();
+                    isValid = false;
+                } else {
+                    $email.addClass('is-valid').removeClass('is-invalid');
+                    $emailError.hide();
+                }
+
+                // Validate password
+                if ($password.val().length < 6) {
+                    $password.addClass('is-invalid').removeClass('is-valid');
+                    $passwordError.show();
+                    isValid = false;
+                } else {
+                    $password.addClass('is-valid').removeClass('is-invalid');
+                    $passwordError.hide();
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    $clientError.removeClass('page-login-split__error--visible');
+                    return;
+                }
+
+                // Show loading state
+                $loginButton.addClass('page-login-split__submit--loading');
+                $btnText.css('opacity', '0');
+                $btnSpinner.show();
+                $loginButton.prop('disabled', true);
+            });
+
+            /* ------------------------------------------------------------------
+               3. INPUT FOCUS — Auto-hide client error
+               ------------------------------------------------------------------ */
+            $email.add($password).on('focus', function () {
+                $clientError.removeClass('page-login-split__error--visible');
+            });
+
+            /* ------------------------------------------------------------------
+               4. LIVE DATE/TIME
+               ------------------------------------------------------------------ */
+            function updateClock() {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                var timeStr = hours.toString().padStart(2, '0') + ':' +
+                              minutes.toString().padStart(2, '0') + ' ' + ampm;
+                var timeEl = document.getElementById('liveTime');
+                if (timeEl) {
+                    timeEl.textContent = timeStr;
+                }
+            }
+
+            updateClock();
+            setInterval(updateClock, 30000);
+
+            /* ------------------------------------------------------------------
+               5. KEYBOARD NAVIGATION — Enter to submit
+               ------------------------------------------------------------------ */
+            $password.on('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    $form.trigger('submit');
+                }
+            });
+
+        })(jQuery);
+    </script>
+
+</body>
+</html>
