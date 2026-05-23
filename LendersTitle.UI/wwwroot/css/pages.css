@@ -2784,3 +2784,170 @@
   background-color: rgba(248, 81, 73, 0.1);
   border-color: rgba(248, 81, 73, 0.25);
 }
+
+
+/* ==========================================================================
+   11. BRANCH MASTER PAGE
+   ========================================================================== */
+
+/* ---- Summary stat cards ---- */
+.branch-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.branch-summary__card {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.branch-summary__card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.branch-summary__value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-1);
+}
+
+.branch-summary__label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  font-weight: var(--font-weight-medium);
+}
+
+.branch-summary__card--active .branch-summary__value {
+  color: var(--color-success);
+}
+
+.branch-summary__card--inactive .branch-summary__value {
+  color: var(--text-muted);
+}
+
+/* ---- Content section (card panel) ---- */
+.content-section {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.content-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.content-section__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.content-section__body {
+  padding: var(--space-2) 0;
+}
+
+/* ---- Page header with breadcrumb + actions ---- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.page-header__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.page-header__breadcrumb a {
+  color: var(--text-link);
+}
+
+.page-header__breadcrumb a:hover {
+  color: var(--text-link-hover);
+  text-decoration: underline;
+}
+
+.page-header__breadcrumb-sep {
+  color: var(--text-muted);
+}
+
+.page-header__breadcrumb-current {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---- Title / subtitle (used with page-header) ---- */
+.page-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-1);
+}
+
+.page-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-6);
+}
+
+/* ---- Form flex helpers ---- */
+.form-group.flex-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- Dark mode overrides ---- */
+[data-theme="dark"] .branch-summary__card {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .branch-summary__card:hover {
+  border-color: var(--border-color-hover);
+}
+
+[data-theme="dark"] .content-section {
+  background-color: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .content-section__header {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .page-header__breadcrumb-current {
+  color: var(--text-secondary);
+}
