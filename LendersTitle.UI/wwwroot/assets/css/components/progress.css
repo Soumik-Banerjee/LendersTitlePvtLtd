@@ -1,0 +1,17 @@
+.progress {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--gray-200);
+  overflow: hidden;
+}
+
+.progress-bar {
+  border-radius: var(--radius-pill);
+  transition: width 0.6s ease;
+  background-color: var(--color-primary);
+}
+
+.progress-bar-success { background-color: var(--color-success); }
+.progress-bar-danger  { background-color: var(--color-danger); }
+.progress-bar-warning { background-color: var(--color-warning); }
+.progress-bar-info    { background-color: var(--color-info); }

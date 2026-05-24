@@ -1,0 +1,60 @@
+﻿.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+
+.text-xs  { font-size: var(--font-size-xs); }
+.text-sm  { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-md  { font-size: var(--font-size-md); }
+.text-lg  { font-size: var(--font-size-lg); }
+.text-xl  { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+.fw-400 { font-weight: var(--font-weight-regular); }
+.fw-500 { font-weight: var(--font-weight-medium); }
+.fw-600 { font-weight: var(--font-weight-semibold); }
+.fw-700 { font-weight: var(--font-weight-bold); }
+
+.text-uppercase  { text-transform: uppercase; }
+.text-lowercase  { text-transform: lowercase; }
+.text-capitalize { text-transform: capitalize; }
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-wrap   { white-space: normal; }
+.text-nowrap { white-space: nowrap; }
+
+.text-break {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.lh-tight   { line-height: var(--line-height-tight); }
+.lh-normal  { line-height: var(--line-height-normal); }
+.lh-relaxed { line-height: var(--line-height-relaxed); }
+
+.text-primary-color { color: var(--color-primary); }
+.text-secondary-color { color: var(--text-secondary); }
+.text-success { color: var(--color-success); }
+.text-danger  { color: var(--color-danger); }
+.text-warning { color: var(--color-warning); }
+.text-info    { color: var(--color-info); }
+.text-muted   { color: var(--text-muted); }
+.text-white   { color: var(--text-inverse); }
+.text-body    { color: var(--text-primary); }
+
+.bg-primary     { background-color: var(--color-primary); }
+.bg-secondary   { background-color: var(--color-secondary); }
+.bg-success     { background-color: var(--color-success); }
+.bg-danger      { background-color: var(--color-danger); }
+.bg-warning     { background-color: var(--color-warning); }
+.bg-info        { background-color: var(--color-info); }
+.bg-body        { background-color: var(--bg-body); }
+.bg-surface     { background-color: var(--bg-surface); }
+.bg-transparent { background-color: transparent; }
+.bg-white       { background-color: #ffffff; }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -8,8 +8,18 @@
 
   <ItemGroup>
     <Folder Include="Models\BranchMasterModel\" />
-    <Folder Include="Data\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Modules\" />
     <Folder Include="Views\Login\" />
+    <Folder Include="Views\Shared\Components\ViewComponents\" />
+    <Folder Include="wwwroot\assets\css\modules\dashboard\" />
+    <Folder Include="wwwroot\assets\css\modules\branch\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.27" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.27" />
   </ItemGroup>
 
 </Project>
