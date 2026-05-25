@@ -1,0 +1,21 @@
+﻿.toast {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  font-size: var(--font-size-sm);
+  overflow: hidden;
+}
+
+.toast-header {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--font-weight-medium);
+}
+
+.toast-body {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+}

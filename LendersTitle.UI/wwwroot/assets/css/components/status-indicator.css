@@ -1,0 +1,39 @@
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.status-indicator__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+  background-color: var(--gray-400);
+}
+
+.status-indicator--online .status-indicator__dot,
+.status-indicator--active .status-indicator__dot {
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 2px var(--color-success-light);
+}
+
+.status-indicator--offline .status-indicator__dot,
+.status-indicator--inactive .status-indicator__dot {
+  background-color: var(--gray-400);
+}
+
+.status-indicator--busy .status-indicator__dot,
+.status-indicator--warning .status-indicator__dot {
+  background-color: var(--color-warning);
+  box-shadow: 0 0 0 2px var(--color-warning-light);
+}
+
+.status-indicator--error .status-indicator__dot,
+.status-indicator--danger .status-indicator__dot {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 0 2px var(--color-danger-light);
+}

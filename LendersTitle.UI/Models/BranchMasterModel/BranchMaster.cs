@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LendersTitle.UI.Models.BranchMasterModel
 {
-    public class BranchMaster
+    public class BranchMasterPostModel
     {
         public int Id { get; set; }
 
@@ -15,9 +15,15 @@ namespace LendersTitle.UI.Models.BranchMasterModel
         public bool IsActive { get; set; } = true;
     }
 
+    public class BranchMasterGetModel
+    {
+        public int Id { get; set; }
+        public string BranchName { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+    }
     public class BranchListViewModel
     {
-        public List<BranchMaster> Branches { get; set; } = new();
+        public List<BranchMasterGetModel> Branches { get; set; } = new();
         public int TotalCount { get; set; }
         public int ActiveCount { get; set; }
         public int InactiveCount { get; set; }

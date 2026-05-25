@@ -1,0 +1,71 @@
+﻿<header class="navbar-top">
+    @* Left: hamburger + breadcrumb *@
+    <div class="navbar-top__left">
+        <button class="navbar-top__toggle" type="button" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <nav class="navbar-top__breadcrumb" aria-label="Breadcrumb">
+            <a asp-controller="Home" asp-action="Index" class="navbar-top__breadcrumb-item">
+                <i class="fa-regular fa-home"></i>
+            </a>
+            <span class="navbar-top__breadcrumb-separator"><i class="fa-solid fa-chevron-right"></i></span>
+            <span class="navbar-top__breadcrumb-item navbar-top__breadcrumb-item--current">@ViewData["Title"]</span>
+        </nav>
+    </div>
+
+    @* Center: global search *@
+    <div class="navbar-top__center">
+        <div class="navbar-top__search">
+            <span class="navbar-top__search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="search" class="navbar-top__search-input" placeholder="Search anything..." aria-label="Global search">
+            <span class="navbar-top__search-shortcut">Ctrl+K</span>
+        </div>
+    </div>
+
+    @* Right: notifications, theme, profile *@
+    <div class="navbar-top__right">
+        @* Notification bell *@
+        <button class="navbar-top__icon-btn" type="button" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="navbar-top__badge navbar-top__badge--dot"></span>
+        </button>
+
+        @* Theme toggle *@
+        <button class="navbar-top__icon-btn navbar-top__theme-toggle" type="button" title="Switch to dark mode">
+            <i class="fa-regular fa-sun"></i>
+            <i class="fa-regular fa-moon"></i>
+        </button>
+
+        @* Profile dropdown *@
+        <div class="navbar-top__profile">
+            <div class="navbar-top__avatar">
+                <span>AU</span>
+            </div>
+            <div class="navbar-top__profile-info">
+                <span class="navbar-top__profile-name">Admin User</span>
+                <span class="navbar-top__profile-role">Administrator</span>
+            </div>
+            <span class="navbar-top__profile-caret"><i class="fa-solid fa-chevron-down"></i></span>
+
+            @* Dropdown *@
+            <div class="navbar-top__profile-dropdown">
+                <div class="navbar-top__profile-dropdown-header">
+                    <div class="navbar-top__profile-dropdown-avatar">
+                        <span>AU</span>
+                    </div>
+                    <div>
+                        <p class="navbar-top__profile-dropdown-name">Admin User</p>
+                        <p class="navbar-top__profile-dropdown-email">admin@lenderstitle.com</p>
+                    </div>
+                </div>
+                <ul class="navbar-top__profile-dropdown-menu">
+                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-user"></i> Profile</a></li>
+                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-gear"></i> Account Settings</a></li>
+                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-bell"></i> Notification Preferences</a></li>
+                    <li class="navbar-top__profile-dropdown-divider"></li>
+                    <li><a href="#" class="navbar-top__profile-dropdown-item navbar-top__profile-dropdown-item--danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>

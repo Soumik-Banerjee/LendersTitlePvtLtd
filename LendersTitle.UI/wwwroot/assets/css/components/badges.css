@@ -1,0 +1,45 @@
+﻿.badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 0.25em 0.6em;
+  border-radius: var(--radius-pill);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--tracking-wide);
+  vertical-align: middle;
+}
+
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: var(--radius-circle);
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+}
+
+.badge-status-active {
+  color: var(--color-success);
+  background-color: var(--color-success-light);
+}
+
+.badge-status-inactive {
+  color: var(--gray-600);
+  background-color: var(--gray-200);
+}
+
+.badge-status-pending {
+  color: var(--color-warning);
+  background-color: var(--color-warning-light);
+}
+
+.badge-status-rejected {
+  color: var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+
+.badge-status-draft {
+  color: var(--gray-500);
+  background-color: var(--gray-100);
+}
