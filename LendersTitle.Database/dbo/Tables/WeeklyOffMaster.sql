@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[WeeklyOffMaster]
 (
-	 AutoID INT IDENTITY(1,1),
+	AutoID INT IDENTITY(1,1),
 
     Branch NVARCHAR(50) NOT NULL,
 
