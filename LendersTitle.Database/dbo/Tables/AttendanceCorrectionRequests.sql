@@ -12,5 +12,6 @@
     [EntryDate]         DATETIME        DEFAULT (getdate()) NULL,
     CONSTRAINT [PK_AttendanceCorrectionRequests] PRIMARY KEY CLUSTERED ([AutoID] ASC),
     CONSTRAINT [FK_AttCorrection_UserMaster] FOREIGN KEY ([UserName]) REFERENCES [dbo].[UserMaster] ([UserName])
+
 );
 
