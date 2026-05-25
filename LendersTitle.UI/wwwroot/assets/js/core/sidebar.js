@@ -158,6 +158,11 @@
             if (!this.wrapper) return;
             this.wrapper.classList.remove(OPEN_CLASS);
             document.body.style.overflow = '';
+            // Clear submenu inline styles so CSS auto-collapse can hide them
+            var submenus = this.sidebar.querySelectorAll('.sidebar__submenu');
+            for (var i = 0; i < submenus.length; i++) {
+                submenus[i].style.maxHeight = '';
+            }
         },
 
         /**
@@ -333,8 +338,13 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(function () {
                     if (self._isMobile()) {
-                        // Close mobile sidebar on resize to desktop
                         self.closeMobile();
+                    } else {
+                        // Clear lingering inline submenu styles so CSS takes over
+                        var submenus = self.sidebar.querySelectorAll('.sidebar__submenu');
+                        for (var i = 0; i < submenus.length; i++) {
+                            submenus[i].style.maxHeight = '';
+                        }
                     }
                 }, 150);
             });

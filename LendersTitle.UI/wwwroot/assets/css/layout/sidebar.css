@@ -399,9 +399,16 @@
 .sidebar-collapsed .sidebar__item-badge,
 .sidebar-collapsed .sidebar__footer-info {
   opacity: 0;
-  width: 0;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
   overflow: hidden;
   pointer-events: none;
+  display:none;
 }
 
 /* Hide submenus entirely */
@@ -415,9 +422,12 @@
 .sidebar-collapsed .sidebar__item {
   justify-content: center;
   padding: 10px 0;
-  margin: 1px auto;
-  gap: 0;
+  margin: 1px 0;
   border-left: none;
+}
+
+.sidebar-collapsed .sidebar__item .sidebar__item-icon {
+  margin: 0;
 }
 
 .sidebar-collapsed .sidebar__item--active {
@@ -498,75 +508,20 @@
 
 
 /* ==========================================================================
-   MOBILE — Off-canvas drawer
-   ==========================================================================
-   On viewports ≤ 1024px the sidebar slides off-screen and is toggled via
-   the `.sidebar-open` class on `<body>` or `.app-wrapper`.
+   BACKDROP — Overlay behind sidebar on mobile drawer
    ========================================================================== */
 
-@media (max-width: 1024px) {
-
-  /* Push sidebar off screen by default */
-  .sidebar {
-    width: var(--sidebar-width);
-    transform: translateX(-100%);
-    box-shadow: none;
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
-  }
-
-  /* Visible when .sidebar-open is active */
-  .sidebar-open .sidebar {
-    transform: translateX(0);
-    box-shadow: var(--shadow-xl);
-  }
-
-  /* ---------- Backdrop overlay ---------- */
-
-  .sidebar-backdrop {
-    position: fixed;
-    inset: 0;
-    background-color: var(--bg-overlay);
-    z-index: calc(var(--z-sidebar) - 1);
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity var(--transition-base),
-      visibility var(--transition-base);
-  }
-
-  .sidebar-open .sidebar-backdrop {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* Reset collapsed overrides on mobile — always show full sidebar */
-  .sidebar-collapsed .sidebar {
-    width: var(--sidebar-width);
-  }
-
-  .sidebar-collapsed .sidebar__item-text,
-  .sidebar-collapsed .sidebar__section-title,
-  .sidebar-collapsed .sidebar__brand-text,
-  .sidebar-collapsed .sidebar__item-arrow,
-  .sidebar-collapsed .sidebar__item-badge,
-  .sidebar-collapsed .sidebar__footer-info {
-    opacity: 1;
-    width: auto;
-    pointer-events: auto;
-  }
-
-  .sidebar-collapsed .sidebar__item {
-    justify-content: flex-start;
-    padding: 10px 16px;
-    gap: var(--space-3);
-  }
-
-  .sidebar-collapsed .sidebar__submenu {
-    visibility: visible;
-    padding-left: var(--space-8);
-  }
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-overlay);
+  z-index: calc(var(--z-sidebar) - 1);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-base),
+    visibility var(--transition-base);
+  pointer-events: none;
 }
 
 /* ---------- Small mobile (≤ 480px) ---------- */

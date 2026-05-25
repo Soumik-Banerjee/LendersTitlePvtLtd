@@ -740,9 +740,9 @@
 /* ---------- Small mobile (≤ 480px) ---------- */
 
 @media (max-width: 480px) {
-  .navbar-top__center {
-    display: none;                     /* hide search bar; use overlay      */
-  }
+  /*.navbar-top__center {
+    display: none;*/                     /* hide search bar; use overlay      */
+  /*}*/
 
   /* Provide a search trigger icon instead */
   .navbar-top__search-trigger {

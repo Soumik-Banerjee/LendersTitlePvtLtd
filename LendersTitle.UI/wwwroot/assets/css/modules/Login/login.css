@@ -227,11 +227,18 @@
 
 .page-login-split__submit .btn-spinner {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  left: calc(50% - 0.625em);
+  top: calc(50% - 0.625em);
   width: 1.25em;
   height: 1.25em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radius-circle);
+  animation: page-login-spin 0.6s linear infinite;
+}
+
+@keyframes page-login-spin {
+  to { transform: rotate(360deg); }
 }
 
 .page-login-split__submit .btn-text {
