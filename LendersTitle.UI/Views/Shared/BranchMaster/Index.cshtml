@@ -1,1 +1,19 @@
-﻿
+﻿@model BranchListViewModel
+@{
+    ViewData["Title"] = "Branch List";
+}
+
+<div class="branch-index">
+    @await Html.PartialAsync("BranchMaster/_StatsCards")
+    @await Html.PartialAsync("BranchMaster/_Toolbar")
+    @await Html.PartialAsync("BranchMaster/_List")
+</div>
+
+@await Html.PartialAsync("BranchMaster/_DeleteModal")
+@await Html.PartialAsync("BranchMaster/_CreateModal", new BranchMasterPostModel())
+
+@section Scripts {
+    <link rel="stylesheet" href="~/assets/css/modules/branch/branch-index.css" asp-append-version="true" />
+    <script src="~/assets/js/modules/branch/branch-index.js" asp-append-version="true"></script>
+    <script src="~/assets/js/modules/branch/branch-create.js" asp-append-version="true"></script>
+}

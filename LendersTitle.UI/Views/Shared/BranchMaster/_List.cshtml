@@ -1,0 +1,79 @@
+@model BranchListViewModel
+
+@if (Model.Branches.Count == 0)
+{
+    <div class="empty-state text-center py-5 border rounded-bottom">
+        <div class="empty-state__icon mb-3 text-muted">
+            <i class="fa-regular fa-building fs-1"></i>
+        </div>
+        <h5 class="empty-state__title">No branches yet</h5>
+        <p class="empty-state__description text-muted mb-4">Get started by creating your first branch.</p>
+        <a asp-controller="BranchMaster" asp-action="Create" class="btn btn-primary">
+            <i class="fa-regular fa-plus me-1"></i>Create Branch
+        </a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-enterprise table-hover align-middle mb-0" id="branch-table">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3" style="width: 60px;">#</th>
+                    <th>Branch Name</th>
+                    <th style="width: 120px;">Status</th>
+                    <th class="text-end pe-3" style="width: 120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="branch-table-body">
+                @for (int i = 0; i < Model.Branches.Count; i++)
+                {
+                    var branch = Model.Branches[i];
+                    <tr class="branch-row"
+                        data-name="@branch.BranchName"
+                        data-status="@branch.IsActive.ToString()">
+                        <td class="ps-3 text-muted">@(i + 1)</td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-medium">@branch.BranchName</span>
+                            </div>
+                        </td>
+                        <td>
+                            @if (branch.IsActive)
+                            {
+                                <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-1">
+                                    <i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i>Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill px-3 py-1">
+                                    <i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i>Inactive
+                                </span>
+                            }
+                        </td>
+                        <td class="text-end pe-3">
+                            <a asp-controller="BranchMaster" asp-action="Edit" asp-route-id="@branch.Id"
+                               class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger btn-delete-branch"
+                                    data-branch-id="@branch.Id"
+                                    data-branch-name="@branch.BranchName"
+                                    title="Delete">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-pagination d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 bg-body-tertiary border-top rounded-bottom">
+        <div class="table-pagination__info text-muted small">
+            Showing @Model.Branches.Count of @Model.TotalCount branches
+        </div>
+    </div>
+}

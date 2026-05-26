@@ -1,0 +1,37 @@
+@model BranchListViewModel
+
+<div class="stats-row">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-primary bg-opacity-10" style="width: 48px; height: 48px;">
+                <i class="fa-solid fa-building fs-5 text-primary"></i>
+            </div>
+            <div>
+                <div class="fs-3 fw-semibold">@Model.TotalCount</div>
+                <div class="text-muted small">Total Branches</div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-success bg-opacity-10" style="width: 48px; height: 48px;">
+                <i class="fa-solid fa-circle-check fs-5 text-success"></i>
+            </div>
+            <div>
+                <div class="fs-3 fw-semibold">@Model.ActiveCount</div>
+                <div class="text-muted small">Active</div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-secondary bg-opacity-10" style="width: 48px; height: 48px;">
+                <i class="fa-solid fa-circle-pause fs-5 text-secondary"></i>
+            </div>
+            <div>
+                <div class="fs-3 fw-semibold">@Model.InactiveCount</div>
+                <div class="text-muted small">Inactive</div>
+            </div>
+        </div>
+    </div>
+</div>

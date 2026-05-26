@@ -1,5 +1,4 @@
-﻿using LendersTitle.UI.Data;
-using LendersTitle.UI.Interfaces.RepositoryInterface;
+﻿using LendersTitle.UI.Interfaces.RepositoryInterface;
 using LendersTitle.UI.Models.BranchMasterModel;
 using Microsoft.Data.SqlClient;
 
@@ -8,11 +7,10 @@ namespace LendersTitle.UI.Repositories
     public class BranchMasterRepository : BranchMasterRepoInterface
     {
         private readonly string _connectionString;
-        private readonly AppDbContext _dbContext;
 
-        public BranchMasterRepository(AppDbContext dbContext)
+        public BranchMasterRepository(IConfiguration configuration)
         {
-            dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
         public async Task<List<BranchMasterGetModel>> GetAllAsync()
