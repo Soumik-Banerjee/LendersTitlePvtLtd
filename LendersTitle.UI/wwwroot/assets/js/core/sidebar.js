@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SIDEBAR.JS — Collapsible Sidebar with Submenu & Mobile Support
+   SIDEBAR.JS — Enterprise Collapsible Sidebar with Search & Mobile
    ==========================================================================
    Usage:
    1. Include this script at the bottom of your page (before </body>)
@@ -15,6 +15,7 @@
    - .sidebar__submenu         — nested submenu <ul>
    - .navbar-top__toggle       — hamburger toggle in navbar (mobile)
    - .sidebar-backdrop         — overlay behind sidebar on mobile
+   - .sidebar__search-input    — search input for filtering navigation
 
    API:
    - SidebarManager.toggle()           — Toggle collapsed state
@@ -24,6 +25,7 @@
    - SidebarManager.toggleSubmenu(el)  — Toggle a specific submenu
    - SidebarManager.openMobile()       — Open mobile drawer
    - SidebarManager.closeMobile()      — Close mobile drawer
+   - SidebarManager.search(query)      — Filter sidebar items
    ========================================================================== */
 
 ;(function (window, document) {
@@ -38,19 +40,20 @@
     var EXPANDED_CLASS     = 'sidebar__item--expanded';
     var ACTIVE_CLASS       = 'sidebar__item--active';
     var SUBMENU_OPEN_CLASS = 'open';
-    var MOBILE_BREAKPOINT  = 992; // px — matches responsive.css lg breakpoint
+    var MOBILE_BREAKPOINT  = 992;
+    var SEARCH_DEBOUNCE    = 150;
 
     /* ----------------------------------------------------------------------
        SIDEBAR MANAGER
        ---------------------------------------------------------------------- */
     var SidebarManager = {
 
-        /** @type {HTMLElement|null} */
         wrapper: null,
-        /** @type {HTMLElement|null} */
         sidebar: null,
-        /** @type {HTMLElement|null} */
         backdrop: null,
+        searchInput: null,
+        searchClear: null,
+        noResults: null,
 
         /**
          * Initialize the sidebar system.
@@ -61,9 +64,12 @@
             this.backdrop = document.querySelector('.sidebar-backdrop');
 
             if (!this.wrapper || !this.sidebar) {
-                // Sidebar elements not found — skip initialization
                 return;
             }
+
+            this.searchInput = this.sidebar.querySelector('.sidebar__search-input');
+            this.searchClear = this.sidebar.querySelector('.sidebar__search-clear');
+            this.noResults   = this.sidebar.querySelector('.sidebar__search-no-results');
 
             this._restoreState();
             this._bindCollapseToggle();
@@ -71,6 +77,7 @@
             this._bindSubmenus();
             this._bindBackdrop();
             this._bindKeyboard();
+            this._bindSearch();
             this._watchResize();
             this._setActiveItem();
         },
@@ -79,9 +86,6 @@
            PUBLIC API
            ------------------------------------------------------------------ */
 
-        /**
-         * Toggle sidebar between collapsed and expanded.
-         */
         toggle: function () {
             if (this._isMobile()) {
                 if (this.wrapper.classList.contains(OPEN_CLASS)) {
@@ -98,20 +102,15 @@
             }
         },
 
-        /**
-         * Collapse the sidebar to icon-only mode.
-         */
         collapse: function () {
             if (!this.wrapper) return;
             this.wrapper.classList.add(COLLAPSED_CLASS);
             this._closeAllSubmenus();
             this._save(true);
+            this._clearSearch();
             this._dispatchEvent('sidebarchange', { collapsed: true });
         },
 
-        /**
-         * Expand the sidebar to full width.
-         */
         expand: function () {
             if (!this.wrapper) return;
             this.wrapper.classList.remove(COLLAPSED_CLASS);
@@ -119,24 +118,16 @@
             this._dispatchEvent('sidebarchange', { collapsed: false });
         },
 
-        /**
-         * Check if sidebar is currently collapsed.
-         * @returns {boolean}
-         */
         isCollapsed: function () {
             return this.wrapper ? this.wrapper.classList.contains(COLLAPSED_CLASS) : false;
         },
 
-        /**
-         * Open sidebar as mobile drawer.
-         */
         openMobile: function () {
             if (!this.wrapper) return;
             this.wrapper.classList.add(OPEN_CLASS);
             this.wrapper.classList.remove(COLLAPSED_CLASS);
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
-            
-            // Ensure backdrop exists
+            document.body.style.overflow = 'hidden';
+
             if (!this.backdrop) {
                 this.backdrop = document.createElement('div');
                 this.backdrop.className = 'sidebar-backdrop';
@@ -144,31 +135,22 @@
                 this._bindBackdrop();
             }
 
-            // Focus trap — focus the sidebar
             if (this.sidebar) {
                 this.sidebar.setAttribute('tabindex', '-1');
                 this.sidebar.focus();
             }
         },
 
-        /**
-         * Close the mobile sidebar drawer.
-         */
         closeMobile: function () {
             if (!this.wrapper) return;
             this.wrapper.classList.remove(OPEN_CLASS);
             document.body.style.overflow = '';
-            // Clear submenu inline styles so CSS auto-collapse can hide them
             var submenus = this.sidebar.querySelectorAll('.sidebar__submenu');
             for (var i = 0; i < submenus.length; i++) {
                 submenus[i].style.maxHeight = '';
             }
         },
 
-        /**
-         * Toggle a submenu open/closed.
-         * @param {HTMLElement} parentItem - The .sidebar__item--has-children element
-         */
         toggleSubmenu: function (parentItem) {
             if (!parentItem) return;
 
@@ -179,16 +161,13 @@
             var isExpanded = parentItem.classList.contains(EXPANDED_CLASS);
 
             if (isExpanded) {
-                // Close this submenu
                 parentItem.classList.remove(EXPANDED_CLASS);
                 submenu.classList.remove(SUBMENU_OPEN_CLASS);
                 submenu.style.maxHeight = '0';
                 if (arrow) arrow.style.transform = '';
             } else {
-                // Optionally close other submenus (accordion behavior)
                 this._closeOtherSubmenus(parentItem);
 
-                // Open this submenu
                 parentItem.classList.add(EXPANDED_CLASS);
                 submenu.classList.add(SUBMENU_OPEN_CLASS);
                 submenu.style.maxHeight = submenu.scrollHeight + 'px';
@@ -196,13 +175,116 @@
             }
         },
 
+        /**
+         * Search/filter sidebar navigation items.
+         * @param {string} query - Search query
+         */
+        search: function (query) {
+            query = (query || '').trim().toLowerCase();
+            var items = this.sidebar.querySelectorAll('.sidebar__item');
+            var sections = this.sidebar.querySelectorAll('.sidebar__section');
+            var hasVisibleItems = false;
+
+            // Reset all items first
+            for (var i = 0; i < items.length; i++) {
+                items[i].classList.remove('highlight-match');
+                items[i].style.display = '';
+            }
+
+            // Show all sections
+            for (var s = 0; s < sections.length; s++) {
+                sections[s].style.display = '';
+            }
+
+            if (this.noResults) {
+                this.noResults.classList.remove('visible');
+            }
+
+            if (query.length === 0) {
+                return;
+            }
+
+            // Filter items, expand matching submenus
+            for (var j = 0; j < items.length; j++) {
+                var itemText = items[j].querySelector('.sidebar__item-text');
+                if (!itemText) continue;
+
+                var text = (itemText.textContent || '').trim().toLowerCase();
+                var matches = text.indexOf(query) !== -1;
+
+                if (matches) {
+                    items[j].classList.add('highlight-match');
+                    hasVisibleItems = true;
+
+                    // Preserve submenu parent item
+                    var parentMenu = items[j].closest('.sidebar__submenu');
+                    if (parentMenu) {
+                        parentMenu.classList.add(SUBMENU_OPEN_CLASS);
+                        parentMenu.style.maxHeight = parentMenu.scrollHeight + 'px';
+                        var parentItem = parentMenu.closest('.sidebar__item--has-children') || parentMenu.previousElementSibling;
+                        if (parentItem && parentItem.classList.contains('sidebar__item--has-children')) {
+                            parentItem.classList.add(EXPANDED_CLASS);
+                            var parArrow = parentItem.querySelector('.sidebar__item-arrow');
+                            if (parArrow) parArrow.style.transform = 'rotate(90deg)';
+                        }
+                    }
+
+                    // Show the section containing this match
+                    var section = items[j].closest('.sidebar__section');
+                    if (section) {
+                        var sectionTitle = section.querySelector('.sidebar__section-title');
+                        if (sectionTitle) {
+                            var sectionText = (sectionTitle.textContent || '').trim().toLowerCase();
+                            if (sectionText.indexOf(query) === -1) {
+                                // section title doesn't match but item does — keep section visible
+                            }
+                        }
+                    }
+                } else {
+                    // Only hide if not a parent of visible submenu items
+                    var isParentOfMatch = false;
+                    var submenu = items[j].querySelector('.sidebar__submenu');
+                    if (submenu) {
+                        var subItems = submenu.querySelectorAll('.sidebar__item');
+                        for (var k = 0; k < subItems.length; k++) {
+                            var subText = subItems[k].querySelector('.sidebar__item-text');
+                            if (subText) {
+                                var st = (subText.textContent || '').trim().toLowerCase();
+                                if (st.indexOf(query) !== -1) {
+                                    isParentOfMatch = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isParentOfMatch) {
+                        items[j].style.display = 'none';
+                    }
+                }
+            }
+
+            // Hide sections with no visible items
+            for (var si = 0; si < sections.length; si++) {
+                var visibleItems = sections[si].querySelectorAll('.sidebar__item:not([style*="display: none"])');
+                if (visibleItems.length === 0) {
+                    sections[si].style.display = 'none';
+                }
+            }
+
+            // Show no-results message
+            if (this.noResults) {
+                if (!hasVisibleItems) {
+                    this.noResults.classList.add('visible');
+                } else {
+                    this.noResults.classList.remove('visible');
+                }
+            }
+        },
+
         /* ------------------------------------------------------------------
            PRIVATE — Binding
            ------------------------------------------------------------------ */
 
-        /**
-         * Bind collapse toggle buttons.
-         */
         _bindCollapseToggle: function () {
             var self = this;
             var buttons = document.querySelectorAll('.sidebar__collapse-btn');
@@ -216,9 +298,6 @@
             }
         },
 
-        /**
-         * Bind the navbar hamburger toggle (primarily for mobile).
-         */
         _bindNavbarToggle: function () {
             var self = this;
             var toggles = document.querySelectorAll('.navbar-top__toggle');
@@ -231,27 +310,20 @@
             }
         },
 
-        /**
-         * Bind click handlers on submenu parent items.
-         */
         _bindSubmenus: function () {
             var self = this;
             var parents = this.sidebar.querySelectorAll('.sidebar__item--has-children');
 
             for (var i = 0; i < parents.length; i++) {
                 (function (parent) {
-                    // Bind click on the parent link itself (not children)
                     var link = parent.querySelector('.sidebar__item-link') || parent;
                     if (link) {
                         link.addEventListener('click', function (e) {
-                            // Don't navigate, just toggle submenu
                             e.preventDefault();
                             e.stopPropagation();
 
-                            // If sidebar is collapsed on desktop, expand it first
                             if (self.isCollapsed() && !self._isMobile()) {
                                 self.expand();
-                                // Small delay to let the sidebar expand visually
                                 setTimeout(function () {
                                     self.toggleSubmenu(parent);
                                 }, 200);
@@ -264,9 +336,6 @@
             }
         },
 
-        /**
-         * Bind backdrop click to close mobile sidebar.
-         */
         _bindBackdrop: function () {
             var self = this;
             if (this.backdrop) {
@@ -276,11 +345,6 @@
             }
         },
 
-        /**
-         * Bind keyboard shortcuts.
-         * - Escape: close mobile sidebar
-         * - [ or ]: toggle sidebar (when not focused on input)
-         */
         _bindKeyboard: function () {
             var self = this;
 
@@ -291,30 +355,93 @@
                     return;
                 }
 
-                // Don't trigger shortcuts when typing in inputs
                 var tag = (e.target.tagName || '').toLowerCase();
-                if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) {
+                var isInput = (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable);
+
+                // Ctrl+/ or Cmd+/ or just / to focus search
+                if ((e.key === '/' && !isInput) || ((e.ctrlKey || e.metaKey) && e.key === '/' && !isInput)) {
+                    e.preventDefault();
+                    if (self.searchInput) {
+                        self.searchInput.focus();
+                        self.searchInput.select();
+                    }
                     return;
                 }
 
-                // [ key toggles sidebar
-                if (e.key === '[' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                // Escape to clear search and blur
+                if (e.key === 'Escape' && self.searchInput && document.activeElement === self.searchInput) {
+                    self._clearSearch();
+                    self.searchInput.blur();
+                    return;
+                }
+
+                // [ key toggles sidebar (only when not in input)
+                if (e.key === '[' && !e.ctrlKey && !e.metaKey && !e.altKey && !isInput) {
                     e.preventDefault();
                     self.toggle();
                 }
             });
         },
 
+        _bindSearch: function () {
+            var self = this;
+
+            if (!this.searchInput) return;
+
+            // Debounced search on input
+            var debounceTimer;
+            this.searchInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                var val = this.value;
+                debounceTimer = setTimeout(function () {
+                    self.search(val);
+                    // Show/hide clear button
+                    if (self.searchClear) {
+                        if (val.trim().length > 0) {
+                            self.searchClear.classList.add('visible');
+                        } else {
+                            self.searchClear.classList.remove('visible');
+                        }
+                    }
+                }, SEARCH_DEBOUNCE);
+            });
+
+            // Clear search on escape
+            this.searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    self._clearSearch();
+                    this.blur();
+                }
+            });
+
+            // Clear button click
+            if (this.searchClear) {
+                this.searchClear.addEventListener('click', function () {
+                    self._clearSearch();
+                    if (self.searchInput) {
+                        self.searchInput.focus();
+                    }
+                });
+            }
+
+            // Create no-results element if not present
+            if (!this.noResults) {
+                this.noResults = document.createElement('div');
+                this.noResults.className = 'sidebar__search-no-results';
+                this.noResults.textContent = 'No menu items found';
+                var body = this.sidebar.querySelector('.sidebar__body');
+                if (body) {
+                    body.appendChild(this.noResults);
+                }
+            }
+        },
+
         /* ------------------------------------------------------------------
            PRIVATE — State Management
            ------------------------------------------------------------------ */
 
-        /**
-         * Restore sidebar state from localStorage.
-         */
         _restoreState: function () {
             if (this._isMobile()) {
-                // Always collapsed on mobile
                 this.wrapper.classList.remove(COLLAPSED_CLASS);
                 return;
             }
@@ -327,9 +454,6 @@
             }
         },
 
-        /**
-         * Watch for window resize to handle breakpoint changes.
-         */
         _watchResize: function () {
             var self = this;
             var debounceTimer;
@@ -339,8 +463,8 @@
                 debounceTimer = setTimeout(function () {
                     if (self._isMobile()) {
                         self.closeMobile();
+                        self._clearSearch();
                     } else {
-                        // Clear lingering inline submenu styles so CSS takes over
                         var submenus = self.sidebar.querySelectorAll('.sidebar__submenu');
                         for (var i = 0; i < submenus.length; i++) {
                             submenus[i].style.maxHeight = '';
@@ -350,41 +474,70 @@
             });
         },
 
-        /**
-         * Set the active sidebar item based on current URL.
-         */
         _setActiveItem: function () {
             var currentPath = window.location.pathname.toLowerCase();
             var items = this.sidebar.querySelectorAll('.sidebar__item');
+
+            // Remove active from section title parents
+            var hasActive = false;
 
             for (var i = 0; i < items.length; i++) {
                 var link = items[i].querySelector('a');
                 if (!link) continue;
 
                 var href = (link.getAttribute('href') || '').toLowerCase();
-                
-                // Remove existing active
+
                 items[i].classList.remove(ACTIVE_CLASS);
 
-                // Match current path
+                // Match current path — most specific match wins
                 if (href && href !== '#' && href !== '/' && currentPath.indexOf(href) !== -1) {
-                    items[i].classList.add(ACTIVE_CLASS);
+                    // Check if there's a more specific match coming
+                    var hrefParts = href.split('/').filter(Boolean);
+                    var currentParts = currentPath.split('/').filter(Boolean);
 
-                    // Auto-expand parent submenu if inside one
-                    var parentSubmenu = items[i].closest('.sidebar__submenu');
-                    if (parentSubmenu) {
-                        var parentItem = parentSubmenu.closest('.sidebar__item--has-children');
-                        if (parentItem && !parentItem.classList.contains(EXPANDED_CLASS)) {
-                            parentItem.classList.add(EXPANDED_CLASS);
-                            parentSubmenu.classList.add(SUBMENU_OPEN_CLASS);
-                            parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
-                            var arrow = parentItem.querySelector('.sidebar__item-arrow');
-                            if (arrow) arrow.style.transform = 'rotate(90deg)';
+                    if (href !== '/') {
+                        // Prefer exact match over partial
+                        if (currentPath === href || currentPath.indexOf(href + '/') === 0 || currentPath.indexOf(href + '?') === 0 || currentPath === href + '/') {
+                            items[i].classList.add(ACTIVE_CLASS);
+                            hasActive = true;
+
+                            var parentSubmenu = items[i].closest('.sidebar__submenu');
+                            if (parentSubmenu) {
+                                var parentItem = parentSubmenu.closest('.sidebar__item--has-children') || 
+                                                  (parentSubmenu.previousElementSibling && parentSubmenu.previousElementSibling.classList.contains('sidebar__item--has-children') ? parentSubmenu.previousElementSibling : null);
+                                if (parentItem && !parentItem.classList.contains(EXPANDED_CLASS)) {
+                                    parentItem.classList.add(EXPANDED_CLASS);
+                                    parentSubmenu.classList.add(SUBMENU_OPEN_CLASS);
+                                    parentSubmenu.style.maxHeight = parentSubmenu.scrollHeight + 'px';
+                                    var arrow = parentItem.querySelector('.sidebar__item-arrow');
+                                    if (arrow) arrow.style.transform = 'rotate(90deg)';
+                                }
+                            }
                         }
                     }
-                } else if (href === '/' && currentPath === '/') {
-                    items[i].classList.add(ACTIVE_CLASS);
+                } else if (href === '/') {
+                    // Root path
+                    if (currentPath === '/' || currentPath === '') {
+                        if (!hasActive) {
+                            items[i].classList.add(ACTIVE_CLASS);
+                            hasActive = true;
+                        }
+                    }
                 }
+            }
+        },
+
+        /* ------------------------------------------------------------------
+           PRIVATE — Search Helpers
+           ------------------------------------------------------------------ */
+
+        _clearSearch: function () {
+            if (this.searchInput) {
+                this.searchInput.value = '';
+            }
+            this.search('');
+            if (this.searchClear) {
+                this.searchClear.classList.remove('visible');
             }
         },
 
@@ -392,9 +545,6 @@
            PRIVATE — Submenu Helpers
            ------------------------------------------------------------------ */
 
-        /**
-         * Close all open submenus.
-         */
         _closeAllSubmenus: function () {
             var expanded = this.sidebar.querySelectorAll('.' + EXPANDED_CLASS);
             for (var i = 0; i < expanded.length; i++) {
@@ -409,10 +559,6 @@
             }
         },
 
-        /**
-         * Close other submenus (accordion behavior) — only siblings.
-         * @param {HTMLElement} currentItem
-         */
         _closeOtherSubmenus: function (currentItem) {
             var parent = currentItem.parentElement;
             if (!parent) return;
@@ -436,19 +582,10 @@
            PRIVATE — Utilities
            ------------------------------------------------------------------ */
 
-        /**
-         * Check if viewport is below mobile breakpoint.
-         * @returns {boolean}
-         */
         _isMobile: function () {
             return window.innerWidth < MOBILE_BREAKPOINT;
         },
 
-        /**
-         * Dispatch a custom event on the document.
-         * @param {string} name
-         * @param {Object} detail
-         */
         _dispatchEvent: function (name, detail) {
             var event;
             try {
@@ -463,20 +600,12 @@
             document.dispatchEvent(event);
         },
 
-        /**
-         * Save collapsed state to localStorage.
-         * @param {boolean} collapsed
-         */
         _save: function (collapsed) {
             try {
                 localStorage.setItem(STORAGE_KEY, String(collapsed));
             } catch (e) { /* ignore */ }
         },
 
-        /**
-         * Get saved collapsed state.
-         * @returns {string|null}
-         */
         _getSaved: function () {
             try {
                 return localStorage.getItem(STORAGE_KEY);
