@@ -42,6 +42,7 @@
 @import url('core/animations.css');
 
 @import url('modules/Login/login.css');
+@import url('modules/branch/branch-index.css');
 @import url('pages.css');
 
 @import url('layout/responsive.css');

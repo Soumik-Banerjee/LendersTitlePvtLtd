@@ -1,1 +1,30 @@
-﻿
+﻿@model BranchMasterPostModel
+@{
+    ViewData["Title"] = "Create Branch";
+}
+
+<div class="create-branch">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom">
+            <h5 class="card-title mb-0">
+                <i class="fa-regular fa-plus me-2 text-primary"></i>New Branch
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="BranchMaster" asp-action="Create" method="post" novalidate>
+                @await Html.PartialAsync("BranchMaster/_Form")
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-regular fa-floppy-disk me-1"></i>Save
+                    </button>
+                    <a asp-controller="BranchMaster" asp-action="Index" class="btn btn-light">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,4 @@
-﻿using LendersTitle.UI.Data;
-using LendersTitle.UI.Interfaces.RepositoryInterface;
+﻿using LendersTitle.UI.Interfaces.RepositoryInterface;
 using LendersTitle.UI.Models.BranchMasterModel;
 using Microsoft.Data.SqlClient;
 

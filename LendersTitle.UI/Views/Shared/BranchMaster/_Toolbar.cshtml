@@ -1,0 +1,21 @@
+<div class="table-toolbar d-flex flex-wrap align-items-center gap-3 p-3 bg-body-tertiary border rounded-top">
+    <div class="table-toolbar__search d-flex align-items-center gap-2 flex-grow-1" style="max-width: 320px;">
+        <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        <input type="text" class="branch-search form-control form-control-sm" placeholder="Search branches..." autocomplete="off" />
+    </div>
+    <div class="table-toolbar__filters d-flex align-items-center gap-2">
+        <select class="status-filter form-select form-select-sm" style="width: auto;">
+            <option value="all">All Status</option>
+            <option value="True">Active</option>
+            <option value="False">Inactive</option>
+        </select>
+    </div>
+    <div class="table-toolbar__actions d-flex align-items-center gap-2 ms-auto">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createModal">
+            <i class="fa-regular fa-plus me-1"></i>Create Branch
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" title="Refresh">
+            <i class="fa-solid fa-rotate"></i>
+        </button>
+    </div>
+</div>

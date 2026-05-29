@@ -346,9 +346,10 @@
     width: var(--sidebar-collapsed-width);
   }
 
-/*  .app-main {
+  .app-main {
     margin-left: var(--sidebar-collapsed-width);
-  }*/
+/*    margin-left: 0;*/
+  }
 
   /* Hide text / badges / arrows / brand text — icon-only mode */
   .sidebar__brand-text,
