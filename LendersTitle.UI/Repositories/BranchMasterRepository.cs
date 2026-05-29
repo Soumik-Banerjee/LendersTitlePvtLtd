@@ -8,11 +8,11 @@ namespace LendersTitle.UI.Repositories
     public class BranchMasterRepository : BranchMasterRepoInterface
     {
         private readonly string _connectionString;
-        private readonly AppDbContext _dbContext;
 
-        public BranchMasterRepository(AppDbContext dbContext)
+        public BranchMasterRepository(IConfiguration configuration)
         {
-            dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string not found.");
         }
 
         public async Task<List<BranchMasterGetModel>> GetAllAsync()

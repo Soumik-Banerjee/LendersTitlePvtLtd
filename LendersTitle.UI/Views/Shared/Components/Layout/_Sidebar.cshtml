@@ -1,4 +1,12 @@
-﻿@* Sidebar Backdrop (mobile/tablet overlay) *@
+﻿@using System.Security.Claims
+@{
+    var fullName = User.FindFirst("FullName")?.Value ?? "User";
+    var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Employee";
+    var initials = fullName.Length > 0
+        ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
+        : "U";
+}
+@* Sidebar Backdrop (mobile/tablet overlay) *@
 <div class="sidebar-backdrop" aria-hidden="true"></div>
 
 @* Sidebar *@
@@ -226,11 +234,11 @@
     <div class="sidebar__footer">
         <div class="sidebar__footer-user">
             <div class="sidebar__footer-avatar">
-                <span>AU</span>
+                <span>@initials</span>
             </div>
             <div class="sidebar__footer-info">
-                <span class="sidebar__footer-name">Admin User</span>
-                <span class="sidebar__footer-role">Administrator</span>
+                <span class="sidebar__footer-name">@fullName</span>
+                <span class="sidebar__footer-role">@role</span>
             </div>
         </div>
         <a asp-controller="Login" asp-action="Logout" class="sidebar__logout-btn" title="Logout" aria-label="Logout">

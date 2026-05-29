@@ -22,7 +22,16 @@
         </div>
     </div>
 
-    @* Right: notifications, theme, profile *@
+    @using System.Security.Claims
+@{
+    var fullName = User.FindFirst("FullName")?.Value ?? "User";
+    var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Employee";
+    var email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+    var initials = fullName.Length > 0
+        ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
+        : "U";
+}
+@* Right: notifications, theme, profile *@
     <div class="navbar-top__right">
         @* Notification bell *@
         <button class="navbar-top__icon-btn" type="button" aria-label="Notifications">
@@ -39,11 +48,11 @@
         @* Profile dropdown *@
         <div class="navbar-top__profile">
             <div class="navbar-top__avatar">
-                <span>AU</span>
+                <span>@initials</span>
             </div>
             <div class="navbar-top__profile-info">
-                <span class="navbar-top__profile-name">Admin User</span>
-                <span class="navbar-top__profile-role">Administrator</span>
+                <span class="navbar-top__profile-name">@fullName</span>
+                <span class="navbar-top__profile-role">@role</span>
             </div>
             <span class="navbar-top__profile-caret"><i class="fa-solid fa-chevron-down"></i></span>
 
@@ -51,11 +60,11 @@
             <div class="navbar-top__profile-dropdown">
                 <div class="navbar-top__profile-dropdown-header">
                     <div class="navbar-top__profile-dropdown-avatar">
-                        <span>AU</span>
+                        <span>@initials</span>
                     </div>
                     <div>
-                        <p class="navbar-top__profile-dropdown-name">Admin User</p>
-                        <p class="navbar-top__profile-dropdown-email">admin@lenderstitle.com</p>
+                        <p class="navbar-top__profile-dropdown-name">@fullName</p>
+                        <p class="navbar-top__profile-dropdown-email">@email</p>
                     </div>
                 </div>
                 <ul class="navbar-top__profile-dropdown-menu">
@@ -63,7 +72,7 @@
                     <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-gear"></i> Account Settings</a></li>
                     <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-bell"></i> Notification Preferences</a></li>
                     <li class="navbar-top__profile-dropdown-divider"></li>
-                    <li><a href="#" class="navbar-top__profile-dropdown-item navbar-top__profile-dropdown-item--danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                    <li><a asp-controller="Login" asp-action="Logout" class="navbar-top__profile-dropdown-item navbar-top__profile-dropdown-item--danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
             </div>
         </div>

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using LendersTitle.UI.Interfaces.ServiceInterface;
 using LendersTitle.UI.Models.BranchMasterModel;
 
 namespace LendersTitle.UI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BranchMasterController : Controller
     {
         private readonly BranchMasterServiceInterface _service;
