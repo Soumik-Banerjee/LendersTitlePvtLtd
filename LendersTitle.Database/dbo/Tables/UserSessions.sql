@@ -8,5 +8,11 @@ CREATE TABLE [dbo].[UserSessions] (
     [DeviceInfo]     NVARCHAR(500) NULL,
     [IPAddress]      NVARCHAR(50) NULL,
     [IsActive]       BIT NOT NULL DEFAULT(1),
+    [BrowserName]    NVARCHAR(100) NULL,
+    [OSName]         NVARCHAR(100) NULL,
+    [DeviceType]     NVARCHAR(50) NULL,
+    [LogoutAt]       DATETIME2(0) NULL,
+    [RevokedBy]      NVARCHAR(100) NULL,
+    [RevokeReason]   NVARCHAR(500) NULL,
     CONSTRAINT FK_UserSessions_UserMaster FOREIGN KEY (UserName) REFERENCES dbo.UserMaster(UserName)
 );

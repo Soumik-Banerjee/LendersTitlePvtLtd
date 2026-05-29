@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using LendersTitle.UI.Data;
 using LendersTitle.UI.Interfaces.RepositoryInterface;
 using LendersTitle.UI.Interfaces.ServiceInterface;
@@ -7,7 +6,7 @@ using LendersTitle.UI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,13 +49,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                         await context.HttpContext.SignOutAsync();
                         return;
                     }
+                    await sessionRepo.DeleteOldSessionsAsync(sessionId);
                     await sessionRepo.UpdateActivityAsync(sessionId);
                 }
 
                 var authTime = context.Principal?.FindFirst("AuthTime")?.Value;
                 if (authTime != null && DateTime.TryParse(authTime, out var loginTime))
                 {
-                    if (DateTime.UtcNow - loginTime.ToUniversalTime() > TimeSpan.FromHours(8))
+                    if (DateTime.Now - loginTime.ToUniversalTime() > TimeSpan.FromHours(8))
                     {
                         if (sessionId != null)
                             await sessionRepo.RevokeSessionAsync(sessionId);

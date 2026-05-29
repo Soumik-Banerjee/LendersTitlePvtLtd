@@ -2,21 +2,21 @@
 
 @if (Model.Branches.Count == 0)
 {
-    <div class="empty-state text-center py-5 border rounded-bottom">
-        <div class="empty-state__icon mb-3 text-muted">
+    <div class="text-center py-5 border rounded-bottom">
+        <div class="mb-3 text-muted">
             <i class="fa-regular fa-building fs-1"></i>
         </div>
-        <h5 class="empty-state__title">No branches yet</h5>
-        <p class="empty-state__description text-muted mb-4">Get started by creating your first branch.</p>
-        <a asp-controller="BranchMaster" asp-action="Create" class="btn btn-primary">
+        <h5>No branches yet</h5>
+        <p class="text-muted mb-4">Get started by creating your first branch.</p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
             <i class="fa-regular fa-plus me-1"></i>Create Branch
-        </a>
+        </button>
     </div>
 }
 else
 {
     <div class="table-responsive">
-        <table class="table table-enterprise table-hover align-middle mb-0" id="branch-table">
+        <table class="table table-hover align-middle mb-0" id="branch-table">
             <thead class="table-light">
                 <tr>
                     <th class="ps-3" style="width: 60px;">#</th>
@@ -71,8 +71,8 @@ else
         </table>
     </div>
 
-    <div class="table-pagination d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 bg-body-tertiary border-top rounded-bottom">
-        <div class="table-pagination__info text-muted small">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 bg-body-tertiary border-top rounded-bottom">
+        <div class="text-muted small">
             Showing @Model.Branches.Count of @Model.TotalCount branches
         </div>
     </div>

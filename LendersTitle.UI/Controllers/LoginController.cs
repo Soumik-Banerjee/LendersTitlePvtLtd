@@ -44,26 +44,30 @@ public class LoginController : Controller
         }
 
         var sessionId = Guid.NewGuid().ToString();
-        var deviceInfo = Request.Headers["User-Agent"].ToString();
+        var userAgent = Request.Headers["User-Agent"].ToString();
         var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var (browserName, osName, deviceType) = ParseUserAgent(userAgent);
 
         await _sessionRepo.CreateSessionAsync(new UserSessionDto
         {
             SessionId = sessionId,
             UserName = user.UserName,
             FullName = user.FullName,
-            LoginAt = DateTime.UtcNow,
-            LastActivityAt = DateTime.UtcNow,
-            AbsoluteExpiryAt = DateTime.UtcNow.AddHours(8),
-            DeviceInfo = deviceInfo,
+            LoginAt = DateTime.Now,
+            LastActivityAt = DateTime.Now,
+            AbsoluteExpiryAt = DateTime.Now.AddHours(8),
+            DeviceInfo = userAgent,
             IPAddress = ipAddress,
-            IsActive = true
+            IsActive = true,
+            BrowserName = browserName,
+            OSName = osName,
+            DeviceType = deviceType
         });
 
         var claims = new[]
         {
             new Claim("SessionId", sessionId),
-            new Claim("AuthTime", DateTime.UtcNow.ToString("o")),
+            new Claim("AuthTime", DateTime.Now.ToString("o")),
             new Claim(ClaimTypes.NameIdentifier, user.AutoId.ToString()),
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim("FullName", user.FullName),
@@ -90,5 +94,50 @@ public class LoginController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         return RedirectToAction("Index");
+    }
+
+    private static (string? browser, string? os, string? deviceType) ParseUserAgent(string userAgent)
+    {
+        if (string.IsNullOrEmpty(userAgent))
+            return (null, null, null);
+
+        string? browser = null;
+        string? os = null;
+        string? deviceType = "Desktop";
+
+        if (userAgent.Contains("Edg", StringComparison.OrdinalIgnoreCase))
+            browser = "Edge";
+        else if (userAgent.Contains("Chrome", StringComparison.OrdinalIgnoreCase))
+            browser = "Chrome";
+        else if (userAgent.Contains("Firefox", StringComparison.OrdinalIgnoreCase))
+            browser = "Firefox";
+        else if (userAgent.Contains("Safari", StringComparison.OrdinalIgnoreCase))
+            browser = "Safari";
+        else if (userAgent.Contains("MSIE", StringComparison.OrdinalIgnoreCase) || userAgent.Contains("Trident", StringComparison.OrdinalIgnoreCase))
+            browser = "Internet Explorer";
+
+        if (userAgent.Contains("Windows NT", StringComparison.OrdinalIgnoreCase))
+            os = "Windows";
+        else if (userAgent.Contains("Mac OS X", StringComparison.OrdinalIgnoreCase))
+            os = "macOS";
+        else if (userAgent.Contains("Linux", StringComparison.OrdinalIgnoreCase) && !userAgent.Contains("Android", StringComparison.OrdinalIgnoreCase))
+            os = "Linux";
+        else if (userAgent.Contains("Android", StringComparison.OrdinalIgnoreCase))
+        {
+            os = "Android";
+            deviceType = "Mobile";
+        }
+        else if (userAgent.Contains("iPhone", StringComparison.OrdinalIgnoreCase) || userAgent.Contains("iPad", StringComparison.OrdinalIgnoreCase))
+        {
+            os = "iOS";
+            deviceType = userAgent.Contains("iPad", StringComparison.OrdinalIgnoreCase) ? "Tablet" : "Mobile";
+        }
+
+        if (userAgent.Contains("Mobile", StringComparison.OrdinalIgnoreCase) && deviceType == "Desktop")
+            deviceType = "Mobile";
+        else if (userAgent.Contains("Tablet", StringComparison.OrdinalIgnoreCase) || userAgent.Contains("iPad", StringComparison.OrdinalIgnoreCase))
+            deviceType = "Tablet";
+
+        return (browser, os, deviceType);
     }
 }

@@ -8,7 +8,7 @@ namespace LendersTitle.UI.Services;
 public class AuthService : IAuthServiceInterface
 {
     private readonly IUserRepository _userRepo;
-    private readonly PasswordHasher<object> _passwordHasher = new();
+    //private readonly PasswordHasher<object> _passwordHasher = new();
 
     public AuthService(IUserRepository userRepo)
     {
@@ -26,9 +26,10 @@ public class AuthService : IAuthServiceInterface
         var storedHash = await _userRepo.GetPasswordHashAsync(user.UserName);
         if (storedHash == null) return null;
 
-        var result = _passwordHasher.VerifyHashedPassword(default!, storedHash, password);
-        if (result == PasswordVerificationResult.Failed) return null;
+        //var result = _passwordHasher.VerifyHashedPassword(default!, storedHash, password);
+        //if (result == PasswordVerificationResult.Failed) return null;
 
         return user;
     }
+
 }
