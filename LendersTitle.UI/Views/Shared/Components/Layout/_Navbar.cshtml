@@ -1,24 +1,23 @@
-﻿<header class="navbar-top">
-    @* Left: hamburger + breadcrumb *@
-    <div class="navbar-top__left">
-        <button class="navbar-top__toggle" type="button" aria-label="Toggle navigation">
-            <i class="fa-solid fa-bars"></i>
+﻿<header class="navbar-top d-flex align-items-center justify-content-between px-3 px-lg-4 py-2 border-bottom">
+
+    <div class="d-flex align-items-center gap-2">
+        <button class="navbar-top__toggle btn btn-link text-decoration-none p-1" type="button" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars fs-5"></i>
         </button>
-        <nav class="navbar-top__breadcrumb" aria-label="Breadcrumb">
-            <a asp-controller="Home" asp-action="Index" class="navbar-top__breadcrumb-item">
+        <nav aria-label="Breadcrumb">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-link text-decoration-none p-0">
                 <i class="fa-regular fa-home"></i>
             </a>
-            <span class="navbar-top__breadcrumb-separator"><i class="fa-solid fa-chevron-right"></i></span>
-            <span class="navbar-top__breadcrumb-item navbar-top__breadcrumb-item--current">@ViewData["Title"]</span>
+            <span class="breadcrumb-chevron mx-1"><i class="fa-solid fa-chevron-right"></i></span>
+            <span class="breadcrumb-current">@ViewData["Title"]</span>
         </nav>
     </div>
 
-    @* Center: global search *@
-    <div class="navbar-top__center">
-        <div class="navbar-top__search">
-            <span class="navbar-top__search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="search" class="navbar-top__search-input" placeholder="Search anything..." aria-label="Global search">
-            <span class="navbar-top__search-shortcut">Ctrl+K</span>
+    <div class="d-none d-md-block">
+        <div class="search-wrapper input-group input-group-sm">
+            <span class="input-group-text bg-transparent border-end-0 search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="search" class="search-input form-control border-start-0" placeholder="Search anything..." aria-label="Global search">
+            <span class="input-group-text bg-transparent search-shortcut">Ctrl+K</span>
         </div>
     </div>
 
@@ -31,50 +30,45 @@
         ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
         : "U";
 }
-@* Right: notifications, theme, profile *@
-    <div class="navbar-top__right">
-        @* Notification bell *@
-        <button class="navbar-top__icon-btn" type="button" aria-label="Notifications">
+    <div class="d-flex align-items-center gap-2">
+
+        <button class="navbar-top__icon-btn btn btn-link text-decoration-none p-1 position-relative" type="button" aria-label="Notifications">
             <i class="fa-regular fa-bell"></i>
-            <span class="navbar-top__badge navbar-top__badge--dot"></span>
+            <span class="notification-dot position-absolute top-0 end-0"></span>
         </button>
 
-        @* Theme toggle *@
-        <button class="navbar-top__icon-btn navbar-top__theme-toggle" type="button" title="Switch to dark mode">
+        <button class="navbar-top__theme-toggle btn btn-link text-decoration-none p-1" type="button" title="Switch to dark mode">
             <i class="fa-regular fa-sun"></i>
             <i class="fa-regular fa-moon"></i>
         </button>
 
-        @* Profile dropdown *@
-        <div class="navbar-top__profile">
-            <div class="navbar-top__avatar">
-                <span>@initials</span>
-            </div>
-            <div class="navbar-top__profile-info">
-                <span class="navbar-top__profile-name">@fullName</span>
-                <span class="navbar-top__profile-role">@role</span>
-            </div>
-            <span class="navbar-top__profile-caret"><i class="fa-solid fa-chevron-down"></i></span>
-
-            @* Dropdown *@
-            <div class="navbar-top__profile-dropdown">
-                <div class="navbar-top__profile-dropdown-header">
-                    <div class="navbar-top__profile-dropdown-avatar">
-                        <span>@initials</span>
-                    </div>
-                    <div>
-                        <p class="navbar-top__profile-dropdown-name">@fullName</p>
-                        <p class="navbar-top__profile-dropdown-email">@email</p>
-                    </div>
+        <div class="dropdown">
+            <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2 p-1" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar-sm d-flex align-items-center justify-content-center rounded-circle">@initials</span>
+                <div class="d-none d-lg-block text-start profile-info">
+                    <div class="profile-name">@fullName</div>
+                    <div class="profile-role">@role</div>
                 </div>
-                <ul class="navbar-top__profile-dropdown-menu">
-                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-user"></i> Profile</a></li>
-                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-gear"></i> Account Settings</a></li>
-                    <li><a href="#" class="navbar-top__profile-dropdown-item"><i class="fa-regular fa-bell"></i> Notification Preferences</a></li>
-                    <li class="navbar-top__profile-dropdown-divider"></li>
-                    <li><a asp-controller="Login" asp-action="Logout" class="navbar-top__profile-dropdown-item navbar-top__profile-dropdown-item--danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-                </ul>
-            </div>
+                <i class="fa-solid fa-chevron-down profile-caret"></i>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm dropdown-menu-custom" aria-labelledby="profileDropdown">
+                <li>
+                    <div class="dropdown-item-text d-flex align-items-center gap-3 px-3 py-2">
+                        <span class="avatar-lg d-flex align-items-center justify-content-center rounded-circle">@initials</span>
+                        <div>
+                            <div class="dropdown-name">@fullName</div>
+                            <div class="dropdown-email">@email</div>
+                        </div>
+                    </div>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-user me-2"></i>Profile</a></li>
+                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-gear me-2"></i>Account Settings</a></li>
+                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-bell me-2"></i>Notification Preferences</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a asp-controller="Login" asp-action="Logout" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
+            </ul>
         </div>
     </div>
 </header>

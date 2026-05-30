@@ -6,58 +6,52 @@
         ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
         : "U";
 }
-@* Sidebar Backdrop (mobile/tablet overlay) *@
-<div class="sidebar-backdrop" aria-hidden="true"></div>
+<div class="sidebar-backdrop d-lg-none" aria-hidden="true"></div>
 
-@* Sidebar *@
-<aside class="sidebar" aria-label="Main navigation">
-    @* ── Brand / Logo Area ─────────────────────────────────────────── *@
-    <div class="sidebar__brand">
+<aside class="sidebar d-flex flex-column border-end" aria-label="Main navigation">
+    <div class="sidebar__brand d-flex align-items-center gap-2 px-3 py-3 border-bottom">
         <img src="~/favicon.ico" alt="LendersTitle" class="sidebar__logo" />
-        <span class="sidebar__brand-text">LendersTitle</span>
-        <button class="sidebar__collapse-btn" type="button" title="Collapse sidebar" aria-label="Collapse sidebar">
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+        <span class="sidebar__brand-text fw-bold">LendersTitle</span>
     </div>
 
-    @* ── Sidebar Search ─────────────────────────────────────────────── *@
-    <div class="sidebar__search">
-        <span class="sidebar__search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-        <input type="text" class="sidebar__search-input" placeholder="Search menu..." aria-label="Search navigation" autocomplete="off">
-        <span class="sidebar__search-clear" role="button" aria-label="Clear search">&times;</span>
+    <div class="sidebar__search px-3 py-2 border-bottom">
+        <div class="input-group input-group-sm">
+            <span class="input-group-text bg-transparent border-end-0 search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="sidebar__search-input form-control border-start-0 border-end-0" placeholder="Search menu..." aria-label="Search navigation" autocomplete="off">
+            <span class="sidebar__search-clear input-group-text bg-transparent border-start-0" role="button" aria-label="Clear search">&times;</span>
+        </div>
     </div>
 
-    @* ── Navigation Body (scrollable) ──────────────────────────────── *@
-    <nav class="sidebar__body">
+    <nav class="sidebar__body flex-grow-1 overflow-y-auto py-2">
 
         @* ── Dashboard ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Main</span>
-            <a asp-controller="Home" asp-action="Index" class="sidebar__item" data-tooltip="Dashboard">
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Main</span>
+            <a asp-controller="Home" asp-action="Index" class="sidebar__item d-flex align-items-center gap-2 px-2 py-2 rounded text-decoration-none" data-tooltip="Dashboard">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-chart-pie"></i></span>
                 <span class="sidebar__item-text">Dashboard</span>
             </a>
         </div>
 
         @* ── Branch Management ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Branch Management</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Branch Management</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Branch Management">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Branch Management">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-building"></i></span>
-                <span class="sidebar__item-text">Branch Management</span>
-                <span class="sidebar__item-badge sidebar__item-badge--info">2</span>
+                <span class="sidebar__item-text flex-grow-1">Branch Management</span>
+                <span class="sidebar__item-badge badge bg-info rounded-pill">2</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="BranchMaster" asp-action="Index" class="sidebar__item sidebar__item-link" data-tooltip="Branch List">
+                    <a asp-controller="BranchMaster" asp-action="Index" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Branch List">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-list"></i></span>
                         <span class="sidebar__item-text">Branch List</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="BranchMaster" asp-action="Create" class="sidebar__item sidebar__item-link" data-tooltip="Create Branch">
+                    <a asp-controller="BranchMaster" asp-action="Create" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Create Branch">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-plus"></i></span>
                         <span class="sidebar__item-text">Create Branch</span>
                     </a>
@@ -66,29 +60,29 @@
         </div>
 
         @* ── Attendance ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Attendance</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Attendance</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Attendance">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Attendance">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-calendar-days"></i></span>
-                <span class="sidebar__item-text">Attendance</span>
+                <span class="sidebar__item-text flex-grow-1">Attendance</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="Attendance" asp-action="CheckIn" class="sidebar__item sidebar__item-link" data-tooltip="Check In">
+                    <a asp-controller="Attendance" asp-action="CheckIn" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Check In">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-calendar-check"></i></span>
                         <span class="sidebar__item-text">Check In</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Attendance" asp-action="History" class="sidebar__item sidebar__item-link" data-tooltip="Attendance History">
+                    <a asp-controller="Attendance" asp-action="History" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance History">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-clock"></i></span>
                         <span class="sidebar__item-text">Attendance History</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Attendance" asp-action="Reports" class="sidebar__item sidebar__item-link" data-tooltip="Attendance Reports">
+                    <a asp-controller="Attendance" asp-action="Reports" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance Reports">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-chart-bar"></i></span>
                         <span class="sidebar__item-text">Attendance Reports</span>
                     </a>
@@ -97,29 +91,29 @@
         </div>
 
         @* ── Employee ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Employee</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Employee</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Employee">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Employee">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-users"></i></span>
-                <span class="sidebar__item-text">Employee</span>
+                <span class="sidebar__item-text flex-grow-1">Employee</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="Employee" asp-action="Index" class="sidebar__item sidebar__item-link" data-tooltip="Employee List">
+                    <a asp-controller="Employee" asp-action="Index" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Employee List">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-list"></i></span>
                         <span class="sidebar__item-text">Employee List</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Employee" asp-action="Departments" class="sidebar__item sidebar__item-link" data-tooltip="Departments">
+                    <a asp-controller="Employee" asp-action="Departments" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Departments">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-building"></i></span>
                         <span class="sidebar__item-text">Departments</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Employee" asp-action="Designations" class="sidebar__item sidebar__item-link" data-tooltip="Designations">
+                    <a asp-controller="Employee" asp-action="Designations" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Designations">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-user-tag"></i></span>
                         <span class="sidebar__item-text">Designations</span>
                     </a>
@@ -128,37 +122,37 @@
         </div>
 
         @* ── Loan Management ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Loan Management</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Loan Management</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Loan Management">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Loan Management">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
-                <span class="sidebar__item-text">Loan Management</span>
-                <span class="sidebar__item-badge">12</span>
+                <span class="sidebar__item-text flex-grow-1">Loan Management</span>
+                <span class="sidebar__item-badge badge rounded-pill bg-secondary">12</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="Loan" asp-action="Application" class="sidebar__item sidebar__item-link" data-tooltip="Loan Application">
+                    <a asp-controller="Loan" asp-action="Application" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Application">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-file-lines"></i></span>
                         <span class="sidebar__item-text">Loan Application</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Loan" asp-action="Approval" class="sidebar__item sidebar__item-link" data-tooltip="Loan Approval">
+                    <a asp-controller="Loan" asp-action="Approval" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Approval">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-circle-check"></i></span>
                         <span class="sidebar__item-text">Loan Approval</span>
-                        <span class="sidebar__item-badge sidebar__item-badge--warning">5</span>
+                        <span class="sidebar__item-badge badge rounded-pill bg-warning text-dark">5</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Loan" asp-action="Disbursement" class="sidebar__item sidebar__item-link" data-tooltip="Disbursement">
+                    <a asp-controller="Loan" asp-action="Disbursement" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Disbursement">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
                         <span class="sidebar__item-text">Disbursement</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Loan" asp-action="EMICollection" class="sidebar__item sidebar__item-link" data-tooltip="EMI Collection">
+                    <a asp-controller="Loan" asp-action="EMICollection" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="EMI Collection">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
                         <span class="sidebar__item-text">EMI Collection</span>
                     </a>
@@ -167,29 +161,29 @@
         </div>
 
         @* ── Reports ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Reports</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Reports</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Reports">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Reports">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-chart-simple"></i></span>
-                <span class="sidebar__item-text">Reports</span>
+                <span class="sidebar__item-text flex-grow-1">Reports</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="Reports" asp-action="Attendance" class="sidebar__item sidebar__item-link" data-tooltip="Attendance Reports">
+                    <a asp-controller="Reports" asp-action="Attendance" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance Reports">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-user-clock"></i></span>
                         <span class="sidebar__item-text">Attendance Reports</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Reports" asp-action="Loan" class="sidebar__item sidebar__item-link" data-tooltip="Loan Reports">
+                    <a asp-controller="Reports" asp-action="Loan" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Reports">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
                         <span class="sidebar__item-text">Loan Reports</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Reports" asp-action="Employee" class="sidebar__item sidebar__item-link" data-tooltip="Employee Reports">
+                    <a asp-controller="Reports" asp-action="Employee" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Employee Reports">
                         <span class="sidebar__item-icon"><i class="fa-solid fa-users-gear"></i></span>
                         <span class="sidebar__item-text">Employee Reports</span>
                     </a>
@@ -198,29 +192,29 @@
         </div>
 
         @* ── Settings ── *@
-        <div class="sidebar__section">
-            <span class="sidebar__section-title">Settings</span>
+        <div class="sidebar__section px-3 mb-1">
+            <span class="sidebar__section-title d-block text-uppercase">Settings</span>
 
-            <div class="sidebar__item sidebar__item--has-children" data-tooltip="Settings">
+            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Settings">
                 <span class="sidebar__item-icon"><i class="fa-solid fa-gear"></i></span>
-                <span class="sidebar__item-text">Settings</span>
+                <span class="sidebar__item-text flex-grow-1">Settings</span>
                 <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
             </div>
-            <ul class="sidebar__submenu">
+            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
                 <li>
-                    <a asp-controller="Settings" asp-action="Users" class="sidebar__item sidebar__item-link" data-tooltip="Users">
+                    <a asp-controller="Settings" asp-action="Users" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Users">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-user"></i></span>
                         <span class="sidebar__item-text">Users</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Settings" asp-action="Roles" class="sidebar__item sidebar__item-link" data-tooltip="Roles">
+                    <a asp-controller="Settings" asp-action="Roles" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Roles">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-shield"></i></span>
                         <span class="sidebar__item-text">Roles</span>
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="Settings" asp-action="Permissions" class="sidebar__item sidebar__item-link" data-tooltip="Permissions">
+                    <a asp-controller="Settings" asp-action="Permissions" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Permissions">
                         <span class="sidebar__item-icon"><i class="fa-regular fa-lock"></i></span>
                         <span class="sidebar__item-text">Permissions</span>
                     </a>
@@ -230,19 +224,21 @@
 
     </nav>
 
-    @* ── Sidebar Footer: User Profile + Logout ──────────────────────── *@
-    <div class="sidebar__footer">
-        <div class="sidebar__footer-user">
-            <div class="sidebar__footer-avatar">
-                <span>@initials</span>
-            </div>
+    @* ── Sidebar Footer ── *@
+    <div class="sidebar__footer border-top d-flex align-items-center px-3 py-2">
+        <div class="d-flex align-items-center gap-2 flex-grow-1">
+            <span class="sidebar__footer-avatar d-flex align-items-center justify-content-center rounded-circle">@initials</span>
             <div class="sidebar__footer-info">
-                <span class="sidebar__footer-name">@fullName</span>
-                <span class="sidebar__footer-role">@role</span>
+                <div class="sidebar__footer-name">@fullName</div>
+                <div class="sidebar__footer-role">@role</div>
             </div>
         </div>
-        <a asp-controller="Login" asp-action="Logout" class="sidebar__logout-btn" title="Logout" aria-label="Logout">
+        <a asp-controller="Login" asp-action="Logout" class="sidebar__logout-btn btn btn-link text-decoration-none p-1" title="Logout" aria-label="Logout">
             <i class="fa-solid fa-right-from-bracket"></i>
         </a>
     </div>
+
+    <button class="sidebar__collapse-btn btn btn-sm border-top w-100 d-flex align-items-center justify-content-center" type="button" title="Collapse sidebar" aria-label="Collapse sidebar">
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
 </aside>

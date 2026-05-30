@@ -25,7 +25,7 @@
     var STORAGE_KEY = 'app-theme';
     var DARK        = 'dark';
     var LIGHT       = 'light';
-    var ATTR        = 'data-theme';
+    var ATTR        = 'data-bs-theme';
 
     /* ----------------------------------------------------------------------
        THEME MANAGER
@@ -102,7 +102,7 @@
         _apply: function (theme, isInit) {
             var previous = this.getTheme();
             
-            // Set the data-theme attribute on <html>
+            // Set the data-bs-theme attribute on <html>
             document.documentElement.setAttribute(ATTR, theme);
 
             // Persist to localStorage

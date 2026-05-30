@@ -1,0 +1,6 @@
+﻿CREATE TABLE DataProtectionKeys
+(
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    FriendlyName NVARCHAR(450) NULL,
+    Xml NVARCHAR(MAX) NULL
+);
