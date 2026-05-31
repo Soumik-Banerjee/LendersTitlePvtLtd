@@ -9,6 +9,15 @@
     @await Html.PartialAsync("BranchMaster/_List")
 </div>
 
+<div id="tempDataToast"
+     data-message="@TempData["SuccessMessage"]"
+     data-type="success"
+     style="display:none"></div>
+<div id="tempDataErrorToast"
+     data-message="@TempData["ErrorMessage"]"
+     data-type="error"
+     style="display:none"></div>
+
 @await Html.PartialAsync("BranchMaster/_DeleteModal")
 @await Html.PartialAsync("BranchMaster/_CreateModal", new BranchMasterPostModel())
 

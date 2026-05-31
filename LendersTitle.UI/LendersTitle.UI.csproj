@@ -11,6 +11,7 @@
     <Folder Include="Helpers\" />
     <Folder Include="Views\Login\" />
     <Folder Include="Views\Shared\Components\ViewComponents\" />
+    <Folder Include="wwwroot\assets\css\core\" />
     <Folder Include="wwwroot\assets\css\modules\dashboard\" />
     <Folder Include="wwwroot\assets\css\modules\branch\" />
   </ItemGroup>

@@ -1,86 +1,100 @@
-﻿;(function ($) {
+﻿(function ($) {
     'use strict';
 
-    var BranchCreate = {
-        $modal: null,
-        $form: null,
-        $submitBtn: null,
-        $formBody: null,
+    var $modal = null;
+    var $form = null;
+    var $submitBtn = null;
+    var $formBody = null;
 
-        init: function () {
-            this.$modal    = $('#createModal');
-            this.$form     = $('#createBranchForm');
-            this.$submitBtn = $('#createBranchSubmit');
-            this.$formBody = $('#createFormBody');
+    function getFormData() {
+        return $form.serialize();
+    }
 
-            if (!this.$modal.length) return;
+    function getActionUrl() {
+        return $form.attr('action');
+    }
 
-            this._bindSubmit();
-            this._bindReset();
-        },
+    function setLoading(loading) {
+        $submitBtn.prop('disabled', loading);
+        $submitBtn.html(loading
+            ? '<span class="spinner-border spinner-border-sm" role="status"></span> Saving...'
+            : '<i class="fa-regular fa-floppy-disk me-1"></i>Save');
+    }
 
-        _bindSubmit: function () {
-            var self = this;
+    function showError(message) {
+        $formBody.html('<div class="alert alert-danger mb-0">' + message + '</div>');
+    }
 
-            this.$form.on('submit', function (e) {
-                e.preventDefault();
+    function reinitValidation() {
+        $form.removeData('validator');
+        $form.removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse($form);
+    }
 
-                if (!self.$form.valid()) return;
+    function resetForm() {
+        $form.trigger('reset');
+        $form.find('.is-invalid').removeClass('is-invalid');
+        $form.find('.is-valid').removeClass('is-valid');
+        $form.find('.text-danger').empty();
+        $form.find('.field-validation-error').remove();
+    }
 
-                self.$submitBtn.prop('disabled', true);
-                self.$submitBtn.html('<span class="spinner-border spinner-border-sm" role="status"></span> Saving...');
-
-                $.ajax({
-                    type: 'POST',
-                    url: self.$form.attr('action'),
-                    data: self.$form.serialize(),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    success: function (response) {
-                        if (response.success) {
-                            self.$modal.modal('hide');
-                            location.reload();
-                        } else {
-                            self.$formBody.html(response);
-                            self._reinitValidation();
-                        }
-                    },
-                    error: function () {
-                        self.$formBody.html(
-                            '<div class="alert alert-danger mb-0">An error occurred. Please try again.</div>'
-                        );
-                    },
-                    complete: function () {
-                        self.$submitBtn.prop('disabled', false);
-                        self.$submitBtn.html('<i class="fa-regular fa-floppy-disk me-1"></i>Save');
-                    }
-                });
-            });
-        },
-
-        _bindReset: function () {
-            var self = this;
-
-            this.$modal.on('hidden.bs.modal', function () {
-                self.$form.trigger('reset');
-                self.$form.find('.is-invalid').removeClass('is-invalid');
-                self.$form.find('.is-valid').removeClass('is-valid');
-                self.$form.find('.text-danger').empty();
-                self.$form.find('.field-validation-error').remove();
-            });
-        },
-
-        _reinitValidation: function () {
-            var $form = this.$form;
-            $form.removeData('validator');
-            $form.removeData('unobtrusiveValidation');
-            $.validator.unobtrusive.parse($form);
+    function handleSuccess(response) {
+        if (response.success) {
+            $modal.modal('hide');
+            showToast(response.message || 'Branch created successfully.','success');
+            setTimeout(function () { location.reload(); }, 1500);
+        } else {
+            $formBody.html(response);
+            reinitValidation();
         }
-    };
+    }
 
-    $(document).ready(function () {
-        BranchCreate.init();
-    });
+    function handleError() {
+        showError('An error occurred. Please try again.');
+    }
 
-})(window.jQuery);
+    function handleComplete() {
+        setLoading(false);
+    }
+
+    function submitForm(e) {
+        e.preventDefault();
+        if (!$form.valid()) return;
+
+        setLoading(true);
+
+        $.ajax({
+            type: 'POST',
+            url: getActionUrl(),
+            data: getFormData(),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            success: handleSuccess,
+            error: handleError,
+            complete: handleComplete
+        });
+    }
+
+    function bindSubmit() {
+        $form.on('submit', submitForm);
+    }
+
+    function bindReset() {
+        $modal.on('hidden.bs.modal', resetForm);
+    }
+
+    function init() {
+        $modal = $('#createModal');
+        $form = $('#createBranchForm');
+        $submitBtn = $('#createBranchSubmit');
+        $formBody = $('#createFormBody');
+
+        if (!$modal.length) return;
+
+        bindSubmit();
+        bindReset();
+    }
+
+    $(document).ready(init);
+
+})(jQuery);

@@ -60,7 +60,13 @@ namespace LendersTitle.UI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
             var (success, message) = await _service.DeleteAsync(id);
+
+            if (isAjax)
+            {
+                return Json(new { success, message, id });
+            }
 
             if (success)
             {

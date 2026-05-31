@@ -1,0 +1,47 @@
+.bg-success-toast { background-color: var(--bs-success-bg-subtle); }
+.text-success-toast { color: var(--bs-success-text-emphasis); }
+.bg-danger-toast { background-color: var(--bs-danger-bg-subtle); }
+.text-danger-toast { color: var(--bs-danger-text-emphasis); }
+.bg-warning-toast { background-color: var(--bs-warning-bg-subtle); }
+.text-warning-toast { color: var(--bs-warning-text-emphasis); }
+.bg-info-toast { background-color: var(--bs-info-bg-subtle); }
+.text-info-toast { color: var(--bs-info-text-emphasis); }
+
+.progress-bar.bg-success-toast { background-color: var(--bs-success); }
+.progress-bar.bg-danger-toast { background-color: var(--bs-danger); }
+.progress-bar.bg-warning-toast { background-color: var(--bs-warning); }
+.progress-bar.bg-info-toast { background-color: var(--bs-info); }
+
+.toast-container .toast .pin-btn,
+.toast-container .toast .copy-btn {
+    font-size: 0.75rem;
+    color: inherit;
+    opacity: 0.6;
+    border: none;
+    background: none;
+    padding: 0.125rem 0.25rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.toast-container .toast .pin-btn:hover,
+.toast-container .toast .copy-btn:hover {
+    opacity: 1;
+}
+
+.toast-container .toast .btn-close {
+    font-size: 0.6rem;
+}
+
+.toast[data-type="success"] .toast-btn[data-pinned="true"] { color: var(--bs-success); }
+.toast[data-type="error"]   .toast-btn[data-pinned="true"] { color: var(--bs-danger); }
+.toast[data-type="warning"] .toast-btn[data-pinned="true"] { color: var(--bs-warning); }
+.toast[data-type="info"]    .toast-btn[data-pinned="true"] { color: var(--bs-info); }
+
+.toast-btn[data-pinned="true"] {
+    opacity: 1;
+}
+
+.toast-progress {
+    border-radius: 0 0 calc(0.375rem - 1px) calc(0.375rem - 1px);
+}

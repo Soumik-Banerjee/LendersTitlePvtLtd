@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/LendersTitle.UI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/assets/css/core/toast.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/css/layout/navbar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/assets/css/components/sidebar.css" asp-append-version="true" />
     <script>
@@ -24,6 +25,7 @@
     </script>
 </head>
 <body>
+    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
     <div class="app-wrapper d-flex min-vh-100">
         @await Html.PartialAsync("Components/Layout/_Sidebar")
 
@@ -47,6 +49,7 @@
     <script src="~/assets/js/core/app.js" asp-append-version="true"></script>
     <script src="~/assets/js/core/ajax.js" asp-append-version="true"></script>
     <script src="~/assets/js/core/auth.js" asp-append-version="true"></script>
+    <script src="~/assets/js/core/toast.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
