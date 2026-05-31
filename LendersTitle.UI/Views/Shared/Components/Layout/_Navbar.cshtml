@@ -1,74 +1,127 @@
-﻿<header class="navbar-top d-flex align-items-center justify-content-between px-3 px-lg-4 py-2 border-bottom">
-
-    <div class="d-flex align-items-center gap-2">
-        <button class="navbar-top__toggle btn btn-link text-decoration-none p-1" type="button" aria-label="Toggle navigation">
-            <i class="fa-solid fa-bars fs-5"></i>
-        </button>
-        <nav aria-label="Breadcrumb">
-            <a asp-controller="Home" asp-action="Index" class="btn btn-link text-decoration-none p-0">
-                <i class="fa-regular fa-home"></i>
-            </a>
-            <span class="breadcrumb-chevron mx-1"><i class="fa-solid fa-chevron-right"></i></span>
-            <span class="breadcrumb-current">@ViewData["Title"]</span>
-        </nav>
-    </div>
-
-    <div class="d-none d-md-block">
-        <div class="search-wrapper input-group input-group-sm">
-            <span class="input-group-text bg-transparent border-end-0 search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="search" class="search-input form-control border-start-0" placeholder="Search anything..." aria-label="Global search">
-            <span class="input-group-text bg-transparent search-shortcut">Ctrl+K</span>
-        </div>
-    </div>
-
-    @using System.Security.Claims
+﻿@using System.Security.Claims
 @{
+    var pageTitle = ViewData["Title"] ?? "Dashboard";
     var fullName = User.FindFirst("FullName")?.Value ?? "User";
     var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Employee";
-    var email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
     var initials = fullName.Length > 0
         ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
         : "U";
 }
-    <div class="d-flex align-items-center gap-2">
 
-        <button class="navbar-top__icon-btn btn btn-link text-decoration-none p-1 position-relative" type="button" aria-label="Notifications">
-            <i class="fa-regular fa-bell"></i>
-            <span class="notification-dot position-absolute top-0 end-0"></span>
-        </button>
+<header class="navbar-top" id="navbarTop">
+    <nav class="navbar-top__inner" aria-label="Top navigation">
 
-        <button class="navbar-top__theme-toggle btn btn-link text-decoration-none p-1" type="button" title="Switch to dark mode">
-            <i class="fa-regular fa-sun"></i>
-            <i class="fa-regular fa-moon"></i>
-        </button>
-
-        <div class="dropdown">
-            <button class="btn btn-link text-decoration-none d-flex align-items-center gap-2 p-1" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="avatar-sm d-flex align-items-center justify-content-center rounded-circle">@initials</span>
-                <div class="d-none d-lg-block text-start profile-info">
-                    <div class="profile-name">@fullName</div>
-                    <div class="profile-role">@role</div>
-                </div>
-                <i class="fa-solid fa-chevron-down profile-caret"></i>
+        @* Left section *@
+        <div class="navbar-top__left">
+            @* Hamburger — visible on tablet/mobile *@
+            <button type="button"
+                    class="navbar-top__hamburger d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#sidebarOffcanvas"
+                    aria-controls="sidebarOffcanvas"
+                    aria-label="Open sidebar navigation">
+                <i class="fa-solid fa-bars"></i>
             </button>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm dropdown-menu-custom" aria-labelledby="profileDropdown">
-                <li>
-                    <div class="dropdown-item-text d-flex align-items-center gap-3 px-3 py-2">
-                        <span class="avatar-lg d-flex align-items-center justify-content-center rounded-circle">@initials</span>
-                        <div>
-                            <div class="dropdown-name">@fullName</div>
-                            <div class="dropdown-email">@email</div>
-                        </div>
-                    </div>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-user me-2"></i>Profile</a></li>
-                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-gear me-2"></i>Account Settings</a></li>
-                <li><a href="#" class="dropdown-item"><i class="fa-regular fa-bell me-2"></i>Notification Preferences</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a asp-controller="Login" asp-action="Logout" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
-            </ul>
+            @* Desktop sidebar toggle *@
+            <button type="button"
+                    class="navbar-top__action d-none d-lg-flex"
+                    id="sidebarToggleDesktop"
+                    aria-label="Toggle sidebar"
+                    title="Toggle sidebar (Ctrl+B)">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
-    </div>
+
+        @* Right section *@
+        <div class="navbar-top__right">
+
+            @* Theme toggle *@
+            <button type="button"
+                    class="navbar-top__action"
+                    id="theme-toggle"
+                    data-theme-toggle
+                    aria-label="Switch theme"
+                    title="Switch theme">
+                <i class="fa-regular fa-moon theme-toggle-icon"></i>
+            </button>
+
+            @* Fullscreen toggle *@
+            <button type="button"
+                    class="navbar-top__action d-none d-sm-flex"
+                    id="fullscreenToggle"
+                    aria-label="Toggle fullscreen"
+                    title="Toggle fullscreen"
+                    onclick="toggleFullscreen()">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+
+            @* Notifications *@
+            <button type="button"
+                    class="navbar-top__action navbar-top__notif"
+                    aria-label="Notifications"
+                    title="Notifications">
+                <i class="fa-regular fa-bell"></i>
+                <span class="navbar-top__badge">3</span>
+            </button>
+
+            @* User dropdown *@
+            <div class="navbar-top__user dropdown">
+                <button type="button"
+                        class="navbar-top__user-btn dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="User menu">
+                    <span class="navbar-top__avatar" aria-hidden="true">@initials</span>
+                    <span class="navbar-top__user-info d-none d-md-inline">
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <h6 class="dropdown-header d-md-none">@fullName</h6>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fa-regular fa-user dropdown-item-icon"></i>
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fa-regular fa-gear dropdown-item-icon"></i>
+                            Settings
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Login")">
+                            <i class="fa-solid fa-right-from-bracket dropdown-item-icon"></i>
+                            Sign out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
+
+<script>
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(function () {});
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    document.addEventListener('fullscreenchange', function () {
+        var icon = document.querySelector('#fullscreenToggle i');
+        if (icon) {
+            icon.className = document.fullscreenElement
+                ? 'fa-solid fa-compress'
+                : 'fa-solid fa-expand';
+        }
+    });
+</script>

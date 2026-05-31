@@ -5,240 +5,457 @@
     var initials = fullName.Length > 0
         ? string.Concat(fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0])).ToUpper()[..Math.Min(2, fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length)]
         : "U";
+    var currentPath = Context.Request.Path.ToString().ToLowerInvariant();
 }
-<div class="sidebar-backdrop d-lg-none" aria-hidden="true"></div>
 
-<aside class="sidebar d-flex flex-column border-end" aria-label="Main navigation">
-    <div class="sidebar__brand d-flex align-items-center gap-2 px-3 py-3 border-bottom">
-        <img src="~/favicon.ico" alt="LendersTitle" class="sidebar__logo" />
-        <span class="sidebar__brand-text fw-bold">LendersTitle</span>
+@functions {
+    bool IsActive(string path)
+    {
+        var current = System.Text.RegularExpressions.Regex.Replace(Context.Request.Path.ToString(), "/$", "");
+        var target = System.Text.RegularExpressions.Regex.Replace(path, "/$", "");
+        return current.Equals(target, StringComparison.OrdinalIgnoreCase) ||
+               current.StartsWith(target + "/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    bool IsParentActive(string[] paths)
+    {
+        var current = Context.Request.Path.ToString().ToLowerInvariant();
+        foreach (var p in paths)
+        {
+            if (current.StartsWith(p.ToLowerInvariant()))
+                return true;
+        }
+        return false;
+    }
+}
+
+@* =========================================================================
+   DESKTOP SIDEBAR (>= 992px)
+   ========================================================================= *@
+<aside class="sidebar sidebar-fixed d-none d-lg-flex" id="sidebarDesktop"
+       aria-label="Main navigation">
+
+    @* Header: Logo + Toggle *@
+    <div class="sidebar__header">
+        <a href="@Url.Action("Index", "Home")" class="sidebar__brand">
+            <span class="sidebar__brand-logo">
+                <i class="fa-solid fa-building-columns"></i>
+            </span>
+            <span class="sidebar__brand-text">Lenders Title</span>
+        </a>
+
+        <button type="button"
+                class="sidebar__toggle-btn"
+                id="sidebarToggle"
+                aria-label="Toggle sidebar"
+                title="Toggle sidebar (Ctrl+B)">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
     </div>
 
-    <div class="sidebar__search px-3 py-2 border-bottom">
-        <div class="input-group input-group-sm">
-            <span class="input-group-text bg-transparent border-end-0 search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="text" class="sidebar__search-input form-control border-start-0 border-end-0" placeholder="Search menu..." aria-label="Search navigation" autocomplete="off">
-            <span class="sidebar__search-clear input-group-text bg-transparent border-start-0" role="button" aria-label="Clear search">&times;</span>
+    @* Search *@
+    <div class="sidebar__search">
+        <div class="sidebar__search-wrapper">
+            <i class="fa-solid fa-search sidebar__search-icon"></i>
+            <input type="search"
+                   class="form-control sidebar__search-input"
+                   placeholder="Search menu..."
+                   aria-label="Search menu"
+                   autocomplete="off" />
         </div>
     </div>
 
-    <nav class="sidebar__body flex-grow-1 overflow-y-auto py-2">
+    @* Scrollable navigation *@
+    <nav class="sidebar__body" aria-label="Sidebar navigation">
+        <ul class="sidebar__nav">
 
-        @* ── Dashboard ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Main</span>
-            <a asp-controller="Home" asp-action="Index" class="sidebar__item d-flex align-items-center gap-2 px-2 py-2 rounded text-decoration-none" data-tooltip="Dashboard">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-chart-pie"></i></span>
-                <span class="sidebar__item-text">Dashboard</span>
-            </a>
-        </div>
+            @* -- Dashboard -- *@
+            <li class="sidebar__section">Main</li>
 
-        @* ── Branch Management ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Branch Management</span>
+            <li class="sidebar__item">
+                <a href="@Url.Action("Index", "Home")"
+                   class="sidebar__link @(IsActive("/home") ? "active" : "")"
+                   aria-current="@(IsActive("/home") ? "page" : null)">
+                    <span class="sidebar__icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="sidebar__label">Dashboard</span>
+                </a>
+            </li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Branch Management">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-building"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Branch Management</span>
-                <span class="sidebar__item-badge badge bg-info rounded-pill">2</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="BranchMaster" asp-action="Index" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Branch List">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-list"></i></span>
-                        <span class="sidebar__item-text">Branch List</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="BranchMaster" asp-action="Create" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Create Branch">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-plus"></i></span>
-                        <span class="sidebar__item-text">Create Branch</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            @* -- Master Data -- *@
+            <li class="sidebar__section">Master Data</li>
 
-        @* ── Attendance ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Attendance</span>
+            <li class="sidebar__item">
+                <a href="@Url.Action("Index", "BranchMaster")"
+                   class="sidebar__link @(IsActive("/branchmaster") ? "active" : "")"
+                   aria-current="@(IsActive("/branchmaster") ? "page" : null)">
+                    <span class="sidebar__icon"><i class="fa-solid fa-building"></i></span>
+                    <span class="sidebar__label">Branches</span>
+                </a>
+            </li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Attendance">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-calendar-days"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Attendance</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="Attendance" asp-action="CheckIn" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Check In">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-calendar-check"></i></span>
-                        <span class="sidebar__item-text">Check In</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Attendance" asp-action="History" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance History">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-clock"></i></span>
-                        <span class="sidebar__item-text">Attendance History</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Attendance" asp-action="Reports" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance Reports">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-chart-bar"></i></span>
-                        <span class="sidebar__item-text">Attendance Reports</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#subEmployee"
+                        aria-expanded="@(IsParentActive(new[]{"/employee"}) ? "true" : "false")"
+                        aria-controls="subEmployee">
+                    <span class="sidebar__icon"><i class="fa-solid fa-users"></i></span>
+                    <span class="sidebar__label">Employees</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/employee"}) ? "show" : "")" id="subEmployee">
+                    <ul class="sidebar__sub">
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/employee") ? "active" : "")">
+                                Employee List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/employee/create") ? "active" : "")">
+                                Add Employee
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
 
-        @* ── Employee ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Employee</span>
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-user-tie"></i></span>
+                    <span class="sidebar__label">Users</span>
+                </a>
+            </li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Employee">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-users"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Employee</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="Employee" asp-action="Index" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Employee List">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-list"></i></span>
-                        <span class="sidebar__item-text">Employee List</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Employee" asp-action="Departments" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Departments">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-building"></i></span>
-                        <span class="sidebar__item-text">Departments</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Employee" asp-action="Designations" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Designations">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-user-tag"></i></span>
-                        <span class="sidebar__item-text">Designations</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            @* -- Operations -- *@
+            <li class="sidebar__section">Operations</li>
 
-        @* ── Loan Management ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Loan Management</span>
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#subLoan"
+                        aria-expanded="@(IsParentActive(new[]{"/loan"}) ? "true" : "false")"
+                        aria-controls="subLoan">
+                    <span class="sidebar__icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                    <span class="sidebar__label">Loan Management</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/loan"}) ? "show" : "")" id="subLoan">
+                    <ul class="sidebar__sub">
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/loan/new") ? "active" : "")">
+                                New Loan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/loan/list") ? "active" : "")">
+                                Loan List
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/loan/approval") ? "active" : "")">
+                                Loan Approval
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/loan/reports") ? "active" : "")">
+                                Loan Reports
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Loan Management">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Loan Management</span>
-                <span class="sidebar__item-badge badge rounded-pill bg-secondary">12</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="Loan" asp-action="Application" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Application">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-file-lines"></i></span>
-                        <span class="sidebar__item-text">Loan Application</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Loan" asp-action="Approval" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Approval">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-circle-check"></i></span>
-                        <span class="sidebar__item-text">Loan Approval</span>
-                        <span class="sidebar__item-badge badge rounded-pill bg-warning text-dark">5</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Loan" asp-action="Disbursement" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Disbursement">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
-                        <span class="sidebar__item-text">Disbursement</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Loan" asp-action="EMICollection" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="EMI Collection">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-hand-holding-dollar"></i></span>
-                        <span class="sidebar__item-text">EMI Collection</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#subAttendance"
+                        aria-expanded="@(IsParentActive(new[]{"/attendance"}) ? "true" : "false")"
+                        aria-controls="subAttendance">
+                    <span class="sidebar__icon"><i class="fa-solid fa-clock"></i></span>
+                    <span class="sidebar__label">Attendance</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/attendance"}) ? "show" : "")" id="subAttendance">
+                    <ul class="sidebar__sub">
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/attendance/daily") ? "active" : "")">
+                                Daily Log
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                               class="sidebar__sub-link @(IsActive("/attendance/report") ? "active" : "")">
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
 
-        @* ── Reports ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Reports</span>
+            @* -- Reports -- *@
+            <li class="sidebar__section">Reports</li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Reports">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-chart-simple"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Reports</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="Reports" asp-action="Attendance" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Attendance Reports">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-user-clock"></i></span>
-                        <span class="sidebar__item-text">Attendance Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Reports" asp-action="Loan" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Loan Reports">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
-                        <span class="sidebar__item-text">Loan Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Reports" asp-action="Employee" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Employee Reports">
-                        <span class="sidebar__item-icon"><i class="fa-solid fa-users-gear"></i></span>
-                        <span class="sidebar__item-text">Employee Reports</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-chart-pie"></i></span>
+                    <span class="sidebar__label">Analytics</span>
+                </a>
+            </li>
 
-        @* ── Settings ── *@
-        <div class="sidebar__section px-3 mb-1">
-            <span class="sidebar__section-title d-block text-uppercase">Settings</span>
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-file-lines"></i></span>
+                    <span class="sidebar__label">Reports</span>
+                </a>
+            </li>
 
-            <div class="sidebar__item sidebar__item--has-children d-flex align-items-center gap-2 px-2 py-2 rounded" data-tooltip="Settings">
-                <span class="sidebar__item-icon"><i class="fa-solid fa-gear"></i></span>
-                <span class="sidebar__item-text flex-grow-1">Settings</span>
-                <span class="sidebar__item-arrow"><i class="fa-solid fa-chevron-right"></i></span>
-            </div>
-            <ul class="sidebar__submenu list-unstyled ps-3 mb-0">
-                <li>
-                    <a asp-controller="Settings" asp-action="Users" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Users">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-user"></i></span>
-                        <span class="sidebar__item-text">Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Settings" asp-action="Roles" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Roles">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-shield"></i></span>
-                        <span class="sidebar__item-text">Roles</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Settings" asp-action="Permissions" class="sidebar__item sidebar__item-link d-flex align-items-center gap-2 px-2 py-1 rounded text-decoration-none" data-tooltip="Permissions">
-                        <span class="sidebar__item-icon"><i class="fa-regular fa-lock"></i></span>
-                        <span class="sidebar__item-text">Permissions</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            @* -- Administration -- *@
+            <li class="sidebar__section">Administration</li>
 
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-gear"></i></span>
+                    <span class="sidebar__label">Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-shield-halved"></i></span>
+                    <span class="sidebar__label">Permissions</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#"
+                   class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-list-check"></i></span>
+                    <span class="sidebar__label">Audit Log</span>
+                </a>
+            </li>
+        </ul>
     </nav>
 
-    @* ── Sidebar Footer ── *@
-    <div class="sidebar__footer border-top d-flex align-items-center px-3 py-2">
-        <div class="d-flex align-items-center gap-2 flex-grow-1">
-            <span class="sidebar__footer-avatar d-flex align-items-center justify-content-center rounded-circle">@initials</span>
-            <div class="sidebar__footer-info">
-                <div class="sidebar__footer-name">@fullName</div>
-                <div class="sidebar__footer-role">@role</div>
+    @* User Profile *@
+    <div class="sidebar__profile">
+        <a href="#" class="sidebar__profile-link" title="User profile">
+            <div class="sidebar__avatar" aria-hidden="true">
+                @initials
             </div>
-        </div>
-        <a asp-controller="Login" asp-action="Logout" class="sidebar__logout-btn btn btn-link text-decoration-none p-1" title="Logout" aria-label="Logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
+            <div class="sidebar__profile-info">
+                <span class="sidebar__profile-name">@fullName</span>
+                <span class="sidebar__profile-role">@role</span>
+            </div>
         </a>
+        <button type="button"
+                class="sidebar__logout"
+                data-logout-url="@Url.Action("Logout", "Login")"
+                aria-label="Sign out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </div>
+</aside>
+
+@* =========================================================================
+   MOBILE OFFCANVAS (< 992px)
+   ========================================================================= *@
+<aside class="offcanvas offcanvas-start sidebar-offcanvas d-lg-none"
+       tabindex="-1"
+       id="sidebarOffcanvas"
+       aria-labelledby="sidebarOffcanvasLabel">
+
+    @* Header *@
+    <div class="offcanvas-header sidebar__header">
+        <a href="@Url.Action("Index", "Home")" class="sidebar__brand" id="sidebarOffcanvasLabel">
+            <span class="sidebar__brand-logo">
+                <i class="fa-solid fa-building-columns"></i>
+            </span>
+            <span class="sidebar__brand-text">Lenders Title</span>
+        </a>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close sidebar"></button>
     </div>
 
-    <button class="sidebar__collapse-btn btn btn-sm border-top w-100 d-flex align-items-center justify-content-center" type="button" title="Collapse sidebar" aria-label="Collapse sidebar">
-        <i class="fa-solid fa-chevron-left"></i>
-    </button>
+    @* Search *@
+    <div class="sidebar__search">
+        <div class="sidebar__search-wrapper">
+            <i class="fa-solid fa-search sidebar__search-icon"></i>
+            <input type="search"
+                   class="form-control sidebar__search-input"
+                   placeholder="Search menu..."
+                   aria-label="Search menu"
+                   autocomplete="off" />
+        </div>
+    </div>
+
+    @* Navigation *@
+    <nav class="sidebar__body" aria-label="Mobile navigation">
+        <ul class="sidebar__nav">
+
+            <li class="sidebar__section">Main</li>
+
+            <li class="sidebar__item">
+                <a href="@Url.Action("Index", "Home")"
+                   class="sidebar__link @(IsActive("/home") ? "active" : "")"
+                   aria-current="@(IsActive("/home") ? "page" : null)">
+                    <span class="sidebar__icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="sidebar__label">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="sidebar__section">Master Data</li>
+
+            <li class="sidebar__item">
+                <a href="@Url.Action("Index", "BranchMaster")"
+                   class="sidebar__link @(IsActive("/branchmaster") ? "active" : "")"
+                   aria-current="@(IsActive("/branchmaster") ? "page" : null)">
+                    <span class="sidebar__icon"><i class="fa-solid fa-building"></i></span>
+                    <span class="sidebar__label">Branches</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#offSubEmployee"
+                        aria-expanded="@(IsParentActive(new[]{"/employee"}) ? "true" : "false")"
+                        aria-controls="offSubEmployee">
+                    <span class="sidebar__icon"><i class="fa-solid fa-users"></i></span>
+                    <span class="sidebar__label">Employees</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/employee"}) ? "show" : "")" id="offSubEmployee">
+                    <ul class="sidebar__sub">
+                        <li><a href="#" class="sidebar__sub-link">Employee List</a></li>
+                        <li><a href="#" class="sidebar__sub-link">Add Employee</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-user-tie"></i></span>
+                    <span class="sidebar__label">Users</span>
+                </a>
+            </li>
+
+            <li class="sidebar__section">Operations</li>
+
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#offSubLoan"
+                        aria-expanded="@(IsParentActive(new[]{"/loan"}) ? "true" : "false")"
+                        aria-controls="offSubLoan">
+                    <span class="sidebar__icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                    <span class="sidebar__label">Loan Management</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/loan"}) ? "show" : "")" id="offSubLoan">
+                    <ul class="sidebar__sub">
+                        <li><a href="#" class="sidebar__sub-link">New Loan</a></li>
+                        <li><a href="#" class="sidebar__sub-link">Loan List</a></li>
+                        <li><a href="#" class="sidebar__sub-link">Loan Approval</a></li>
+                        <li><a href="#" class="sidebar__sub-link">Loan Reports</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="sidebar__item sidebar__item--has-sub">
+                <button type="button"
+                        class="sidebar__link sidebar__link--sub-toggle"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#offSubAttendance"
+                        aria-expanded="@(IsParentActive(new[]{"/attendance"}) ? "true" : "false")"
+                        aria-controls="offSubAttendance">
+                    <span class="sidebar__icon"><i class="fa-solid fa-clock"></i></span>
+                    <span class="sidebar__label">Attendance</span>
+                    <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
+                </button>
+                <div class="collapse @(IsParentActive(new[]{"/attendance"}) ? "show" : "")" id="offSubAttendance">
+                    <ul class="sidebar__sub">
+                        <li><a href="#" class="sidebar__sub-link">Daily Log</a></li>
+                        <li><a href="#" class="sidebar__sub-link">Reports</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="sidebar__section">Reports</li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-chart-pie"></i></span>
+                    <span class="sidebar__label">Analytics</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-file-lines"></i></span>
+                    <span class="sidebar__label">Reports</span>
+                </a>
+            </li>
+
+            <li class="sidebar__section">Administration</li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-gear"></i></span>
+                    <span class="sidebar__label">Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-shield-halved"></i></span>
+                    <span class="sidebar__label">Permissions</span>
+                </a>
+            </li>
+
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link">
+                    <span class="sidebar__icon"><i class="fa-solid fa-list-check"></i></span>
+                    <span class="sidebar__label">Audit Log</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    @* User Profile *@
+    <div class="sidebar__profile">
+        <a href="#" class="sidebar__profile-link">
+            <div class="sidebar__avatar" aria-hidden="true">
+                @initials
+            </div>
+            <div class="sidebar__profile-info">
+                <span class="sidebar__profile-name">@fullName</span>
+                <span class="sidebar__profile-role">@role</span>
+            </div>
+        </a>
+        <button type="button"
+                class="sidebar__logout"
+                data-logout-url="@Url.Action("Logout", "Login")"
+                aria-label="Sign out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </div>
 </aside>
