@@ -5,7 +5,7 @@ using LendersTitle.UI.Models.BranchMasterModel;
 
 namespace LendersTitle.UI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class BranchMasterController : Controller
     {
         private readonly BranchMasterServiceInterface _service;
