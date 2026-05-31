@@ -1,0 +1,38 @@
+@{
+    var now = DateTime.Now;
+    var today = now.ToString("dddd, dd MMMM yyyy");
+    var currentTime = now.ToString("hh:mm:ss tt");
+}
+
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
+    <div class="card-body p-4 p-lg-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-7">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="d-flex align-items-center justify-content-center rounded-3 bg-primary bg-opacity-10"
+                         style="width: 64px; height: 64px;">
+                        <i class="fa-regular fa-clock fs-2 text-primary"></i>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill px-3 py-1">
+                                <i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i>Checked Out
+                            </span>
+                        </div>
+                        <div class="attendance-checkin__dots mb-1">
+                            <span></span><span></span><span></span>
+                            <span class="text-muted ms-1" style="font-size: 0.75rem;">Live</span>
+                        </div>
+                        <div class="text-muted small">@today</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-md-end">
+                <div class="attendance-checkin__today text-primary mb-2">@currentTime</div>
+                <button type="button" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
+                    <i class="fa-regular fa-circle-check me-2"></i>Check In
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

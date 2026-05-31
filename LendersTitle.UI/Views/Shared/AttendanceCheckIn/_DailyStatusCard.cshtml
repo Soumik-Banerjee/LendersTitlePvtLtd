@@ -1,0 +1,98 @@
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2 px-4 py-3">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-regular fa-clipboard-list text-primary"></i>
+            <h6 class="mb-0 fw-semibold">Today's Attendance Log</h6>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-1">
+                <i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i>Present
+            </span>
+            <span class="text-muted small">01 Jun 2026</span>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="attendance-timeline">
+                    <div class="position-relative pb-4">
+                        <div class="attendance-timeline__dot attendance-timeline__dot--in"></div>
+                        <div class="ps-3">
+                            <div class="text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Check In</div>
+                            <div class="fs-5 fw-semibold">11:25:25 PM</div>
+                            <div class="d-flex align-items-center gap-2 mt-1">
+                                <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-2 py-0" style="font-size: 0.7rem;">
+                                    <i class="fa-solid fa-location-dot me-1"></i>Outside
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-relative">
+                        <div class="attendance-timeline__dot attendance-timeline__dot--out"></div>
+                        <div class="ps-3">
+                            <div class="text-muted small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Check Out</div>
+                            <div class="fs-5 fw-semibold">11:37:18 PM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center justify-content-center rounded-3 bg-info bg-opacity-10" style="width: 40px; height: 40px;">
+                        <i class="fa-regular fa-hourglass-half text-info"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Total Duration</div>
+                        <div class="fw-semibold fs-6">00:11:52</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="bg-body-tertiary rounded-3 p-3 p-lg-4 h-100">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="fa-solid fa-circle-info text-primary" style="font-size: 0.85rem;"></i>
+                        <span class="fw-semibold small">Check-In Details</span>
+                    </div>
+
+                    <div class="attendance-detail-grid mb-3">
+                        <div class="attendance-detail-grid__item">
+                            <span class="attendance-detail-grid__label">Latitude</span>
+                            <span class="attendance-detail-grid__value">23.538998</span>
+                        </div>
+                        <div class="attendance-detail-grid__item">
+                            <span class="attendance-detail-grid__label">Longitude</span>
+                            <span class="attendance-detail-grid__value">87.308846</span>
+                        </div>
+                        <div class="attendance-detail-grid__item">
+                            <span class="attendance-detail-grid__label">Accuracy</span>
+                            <span class="attendance-detail-grid__value">63m <span class="badge bg-success-subtle text-success-emphasis rounded-pill px-2 py-0" style="font-size: 0.65rem;">Good</span></span>
+                        </div>
+                        <div class="attendance-detail-grid__item">
+                            <span class="attendance-detail-grid__label">Distance</span>
+                            <span class="attendance-detail-grid__value">1,505.74 km</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="text-muted small mb-1">Address</div>
+                        <div class="bg-body border rounded-2 p-2 small">
+                            <i class="fa-solid fa-location-dot text-muted me-1" style="font-size: 0.7rem;"></i>
+                            Durgapur, Faridpur Durgapur, Paschim Bardhaman, West Bengal, 713200, India
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted small mb-1">Device / Browser</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fa-brands fa-chrome text-muted"></i>
+                            <span class="small fw-medium">Google Chrome on Windows</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+.attendance-timeline {
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.attendance-timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--bs-border-color);
+    border-radius: 1px;
+}
+
+.attendance-timeline__dot {
+    position: absolute;
+    left: -1.5rem;
+    top: 0.25rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--bs-border-color);
+    background: var(--bs-body-bg);
+    z-index: 1;
+}
+
+.attendance-timeline__dot--in {
+    border-color: var(--bs-success);
+    background: var(--bs-success-bg-subtle);
+}
+
+.attendance-timeline__dot--out {
+    border-color: var(--bs-danger);
+    background: var(--bs-danger-bg-subtle);
+}
+
+.attendance-checkin__today {
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+@media (max-width: 575.98px) {
+    .attendance-checkin__today {
+        font-size: 1.75rem;
+    }
+}
+
+.attendance-checkin__dots {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.attendance-checkin__dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bs-secondary-color);
+    opacity: 0.4;
+    animation: attendancePulse 1.4s ease-in-out infinite;
+}
+
+.attendance-checkin__dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.attendance-checkin__dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes attendancePulse {
+    0%, 80%, 100% { opacity: 0.4; }
+    40% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .attendance-checkin__dots span {
+        animation: none;
+        opacity: 0.6;
+    }
+}
+
+.attendance-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .attendance-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.attendance-detail-grid__item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: var(--font-size-sm, 0.8125rem);
+}
+
+.attendance-detail-grid__label {
+    color: var(--bs-secondary-color);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.attendance-detail-grid__value {
+    color: var(--bs-body-color);
+    font-weight: 500;
+    word-break: break-all;
+}
+
+/* ── Check-in card accent top border ── */
+.card-accent-primary {
+    border-top: 3px solid var(--bs-primary);
+}
+
+.card-accent-success {
+    border-top: 3px solid var(--bs-success);
+}
+
+.card-accent-warning {
+    border-top: 3px solid var(--bs-warning);
+}
+
+.card-accent-info {
+    border-top: 3px solid var(--bs-info);
+}

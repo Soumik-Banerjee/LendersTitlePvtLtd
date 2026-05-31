@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Attendance Check-In";
+}
+
+<link rel="stylesheet" href="~/assets/css/modules/attendance/attendance-index.css" asp-append-version="true" />
+
+<div class="attendance-dashboard">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+            <h4 class="fw-semibold mb-1">Attendance Check-In</h4>
+            <p class="text-muted small mb-0">Track and manage your daily attendance</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <select class="form-select form-select-sm" style="width: auto;">
+                <option value="@DateTime.Now.ToString("MMMM yyyy")" selected>@DateTime.Now.ToString("MMMM yyyy")</option>
+            </select>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("AttendanceCheckIn/_CheckInCard")
+    @await Html.PartialAsync("AttendanceCheckIn/_StatsCards")
+    @await Html.PartialAsync("AttendanceCheckIn/_DailyStatusCard")
+</div>

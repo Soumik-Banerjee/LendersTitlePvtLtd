@@ -179,17 +179,17 @@
                         class="sidebar__link sidebar__link--sub-toggle"
                         data-bs-toggle="collapse"
                         data-bs-target="#subAttendance"
-                        aria-expanded="@(IsParentActive(new[]{"/attendance"}) ? "true" : "false")"
+                        aria-expanded="@(IsParentActive(new[]{"/attendance", "/attendancecheckin"}) ? "true" : "false")"
                         aria-controls="subAttendance">
                     <span class="sidebar__icon"><i class="fa-solid fa-clock"></i></span>
                     <span class="sidebar__label">Attendance</span>
                     <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
                 </button>
-                <div class="collapse @(IsParentActive(new[]{"/attendance"}) ? "show" : "")" id="subAttendance">
+                <div class="collapse @(IsParentActive(new[]{"/attendance", "/attendancecheckin"}) ? "show" : "")" id="subAttendance">
                     <ul class="sidebar__sub">
                         <li>
-                            <a href="#"
-                               class="sidebar__sub-link @(IsActive("/attendance/daily") ? "active" : "")">
+                            <a href="/AttendanceCheckIn/Index"
+                               class="sidebar__sub-link @(IsActive("/AttendanceCheckIn/Index") ? "active" : "")">
                                 Daily Log
                             </a>
                         </li>
@@ -385,15 +385,15 @@
                         class="sidebar__link sidebar__link--sub-toggle"
                         data-bs-toggle="collapse"
                         data-bs-target="#offSubAttendance"
-                        aria-expanded="@(IsParentActive(new[]{"/attendance"}) ? "true" : "false")"
+                        aria-expanded="@(IsParentActive(new[]{"/attendance", "/attendancecheckin"}) ? "true" : "false")"
                         aria-controls="offSubAttendance">
                     <span class="sidebar__icon"><i class="fa-solid fa-clock"></i></span>
                     <span class="sidebar__label">Attendance</span>
                     <i class="fa-solid fa-chevron-down sidebar__arrow"></i>
                 </button>
-                <div class="collapse @(IsParentActive(new[]{"/attendance"}) ? "show" : "")" id="offSubAttendance">
+                <div class="collapse @(IsParentActive(new[]{"/attendance", "/attendancecheckin"}) ? "show" : "")" id="offSubAttendance">
                     <ul class="sidebar__sub">
-                        <li><a href="#" class="sidebar__sub-link">Daily Log</a></li>
+                        <li><a href="/AttendanceCheckIn/Index" class="sidebar__sub-link">Daily Log</a></li>
                         <li><a href="#" class="sidebar__sub-link">Reports</a></li>
                     </ul>
                 </div>
