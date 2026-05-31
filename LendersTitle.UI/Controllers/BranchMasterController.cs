@@ -22,6 +22,19 @@ namespace LendersTitle.UI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetBranchesJson()
+        {
+            var model = await _service.GetAllAsync();
+            var data = model.Branches.Select(b => new
+            {
+                id = b.Id,
+                branchName = b.BranchName,
+                isActive = b.IsActive
+            });
+            return Json(new { data });
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View("~/Views/Shared/BranchMaster/Create.cshtml", new BranchMasterPostModel());
